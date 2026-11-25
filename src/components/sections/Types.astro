@@ -17,7 +17,17 @@ import SwipeBar from '../SwipeBar.astro';
     <ul role="list" class="types swipe" aria-label="ჭერის ტიპები — გადაფურცლეთ გვერდულად">
       {ceilingTypes.map((t) => (
         <li class="type">
-          <div class="ph" style="--ph-ratio: 4 / 3">{t.title}</div>
+          <img
+            class="type__img"
+            src={`/images/types/${t.id}-960.jpg`}
+            srcset={`/images/types/${t.id}-480.jpg 480w, /images/types/${t.id}-960.jpg 960w`}
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 85vw"
+            width="960"
+            height="720"
+            alt={t.alt}
+            loading="lazy"
+            decoding="async"
+          />
           <div class="type__body">
             <h3 class="type__title">{t.title}</h3>
             <p class="type__text muted">{t.text}</p>
@@ -38,6 +48,7 @@ import SwipeBar from '../SwipeBar.astro';
     border: 1px solid var(--c-line);
   }
   .type { background: var(--c-bg); display: grid; align-content: start; }
+  .type__img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #e6e6e3; }
   .type__body { display: grid; gap: var(--sp-2); padding: var(--sp-5); }
   .type__title { font-size: var(--fs-xl); }
   .type__text { font-size: var(--fs-sm); }
@@ -48,6 +59,11 @@ import SwipeBar from '../SwipeBar.astro';
     .types { background: none; border: 0; }
     .type { border: 1px solid var(--c-line); }
   }
-  @media (min-width: 640px) { .types { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 640px) {
+    .types { grid-template-columns: repeat(2, 1fr); }
+    /* 7 ტიპი: პირველი (მატი) ორ სვეტზეა, რომ ბადეში ცარიელი უჯრა არ დარჩეს */
+    .type:first-child { grid-column: span 2; }
+    .type:first-child .type__img { aspect-ratio: 8 / 3; }
+  }
   @media (min-width: 1024px) { .types { grid-template-columns: repeat(4, 1fr); } }
 </style>

@@ -6,8 +6,7 @@
   "canvas": [
     { "id": "matte", "label": "მატი", "pricePerM2": 25 },
     { "id": "satin", "label": "სატინი", "pricePerM2": 28 },
-    { "id": "glossy", "label": "პრიალა", "pricePerM2": 30 },
-    { "id": "fabric", "label": "ქსოვილის", "pricePerM2": 55 }
+    { "id": "glossy", "label": "პრიალა", "pricePerM2": 30 }
   ],
   "profile": [
     { "id": "standard", "label": "სტანდარტული", "pricePerM": 0 },
