@@ -1,0 +1,265 @@
+---
+import { hero, stats } from '../../data/content';
+import { whatsappLink } from '../../data/site';
+
+// ფოტო: Pexels #39733025 (shaza jocarlos), Pexels License.
+// ხაზების კოორდინატები ფოტოს 1200×675 სისტემაშია (viewBox).
+// ფოტოს შეცვლისას ეს კოორდინატებიც ხელახლა უნდა მოერგოს.
+const lines = [
+  'M285 0 L443 168 L1200 168', // დიაგონალი + გრძელი ჰორიზონტალური
+  'M508 50 L542 158',
+  'M578 38 L584 133',
+  'M560 132 L760 132',
+  'M508 147 L755 147',
+  'M1100 50 L1200 50',
+  'M1170 10 L1200 10',
+  'M935 240 L1057 240 L1057 315', // დერეფანი
+  'M1010 248 L1012 300',
+  'M1025 248 L1025 420',
+  'M1040 345 L1040 437',
+];
+const spots = [
+  [962, 50], [1030, 50], [812, 131], [858, 131],
+];
+---
+
+<section class="hero" data-hero>
+  <div class="hero__media" aria-hidden="true">
+    <img
+      class="hero__img"
+      src="/images/hero/living-led-2400.jpg"
+      srcset="/images/hero/living-led-1200.jpg 1200w, /images/hero/living-led-2400.jpg 2400w, /images/hero/living-led-3840.jpg 3840w"
+      sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"
+      width="3840"
+      height="2160"
+      alt=""
+      fetchpriority="high"
+      decoding="async"
+      data-hero-img
+    />
+
+    <svg class="hero__lights" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <filter id="led-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="6" />
+        </filter>
+        <radialGradient id="spot-glow">
+          <stop offset="0" stop-color="#fff7e6" stop-opacity="1" />
+          <stop offset="1" stop-color="#fff7e6" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+
+      <g class="hero__glow" filter="url(#led-glow)">
+        {lines.map((d, i) => <path d={d} pathLength="1" style={`--i:${i}`} />)}
+      </g>
+      <g class="hero__core">
+        {lines.map((d, i) => <path d={d} pathLength="1" style={`--i:${i}`} />)}
+      </g>
+      <g class="hero__spots">
+        {spots.map(([x, y], i) => <circle cx={x} cy={y} r="18" fill="url(#spot-glow)" style={`--i:${i}`} />)}
+      </g>
+    </svg>
+
+    <div class="hero__scrim"></div>
+  </div>
+
+  <div class="container hero__content">
+    <p class="hero__eyebrow">{hero.eyebrow}</p>
+    <h1 class="hero__title">{hero.title}</h1>
+    <p class="hero__lead">{hero.lead}</p>
+    <div class="hero__ctas">
+      <a class="btn hero__btn hero__btn--primary" href="#calculator">გამოთვალე ფასი</a>
+      <a class="btn hero__btn hero__btn--ghost" href={whatsappLink('გამარჯობა! მინდა უფასო კონსულტაცია.')} target="_blank" rel="noopener">
+        უფასო კონსულტაცია
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <dl class="stats">
+    {stats.map((s) => (
+      <div class="stats__item">
+        <dt class="stats__label muted">{s.label}</dt>
+        <dd class="stats__value">{s.value}</dd>
+      </div>
+    ))}
+  </dl>
+</div>
+
+<style>
+  /* ---------- Hero: ფოტო მთლიანად ფარავს ---------- */
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: calc(100svh - var(--header-h) - var(--mobilebar-h) - env(safe-area-inset-bottom));
+    color: #f4f4f2;
+    background: #0b0a09;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  @media (min-width: 1024px) {
+    .hero { min-height: min(calc(100svh - var(--header-h)), 980px); align-items: center; }
+  }
+
+  .hero__media { position: absolute; inset: 0; z-index: -1; }
+  .hero__img,
+  .hero__lights {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .hero__img { object-fit: cover; object-position: 50% 50%; }
+
+  /* ხაზები — ჩვეულებრივ მდგომარეობაში უხილავია (ფოტოზე უკვე ანთებულია) */
+  .hero__lights { pointer-events: none; mix-blend-mode: screen; opacity: 0; }
+  .hero__lights path {
+    fill: none;
+    stroke: #fff6e2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+  .hero__glow path { stroke-width: 9; opacity: 0.9; }
+  .hero__core path { stroke-width: 2.6; }
+
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, rgb(0 0 0 / 0.8) 0%, rgb(0 0 0 / 0.5) 40%, transparent 66%);
+  }
+  @media (min-width: 1024px) {
+    .hero__scrim {
+      background:
+        linear-gradient(to right, rgb(0 0 0 / 0.62) 0%, rgb(0 0 0 / 0.3) 38%, transparent 60%),
+        linear-gradient(to top, rgb(0 0 0 / 0.35), transparent 40%);
+    }
+  }
+
+  .hero__content {
+    display: grid;
+    gap: var(--sp-4);
+    padding-block: var(--sp-7) var(--sp-6);
+  }
+  @media (min-width: 1024px) {
+    .hero__content { gap: var(--sp-5); padding-block: var(--sp-8); }
+    .hero__content > * { max-width: 34rem; }
+  }
+  .hero__eyebrow { font-size: var(--fs-xs); letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+  .hero__title { font-size: var(--fs-3xl); font-weight: 300; letter-spacing: -0.01em; }
+  .hero__lead { font-size: var(--fs-lg); max-width: 40ch; opacity: 0.85; }
+  .hero__ctas { display: grid; gap: var(--sp-3); margin-top: var(--sp-2); }
+  @media (min-width: 560px) { .hero__ctas { display: flex; flex-wrap: wrap; } }
+
+  .hero__btn { border-color: #f4f4f2; }
+  .hero__btn--primary { background: #f4f4f2; color: #0e0e0e; }
+  .hero__btn--primary:hover { background: transparent; color: #f4f4f2; }
+  .hero__btn--ghost { background: transparent; color: #f4f4f2; }
+  .hero__btn--ghost:hover { background: #f4f4f2; color: #0e0e0e; }
+
+  /* ---------- „ნათურების ანთება“ ----------
+     html.lights-off — ემატება <head>-ში (BaseLayout), JS-ის გარეშე ანიმაცია არ ხდება.
+     .is-on — ემატება, როცა ფოტო ჩაიტვირთა. */
+  :global(html.lights-off) .hero__img { filter: brightness(0.09) saturate(0.6); }
+  :global(html.lights-off) .hero__lights { opacity: 1; }
+  :global(html.lights-off) .hero__lights path { stroke-dashoffset: 1; }
+  :global(html.lights-off) .hero__spots circle { opacity: 0; }
+  :global(html.lights-off) .hero__content { opacity: 0; translate: 0 16px; }
+
+  /* ყველა დრო მრავლდება --intro-speed-ზე (tokens.css) */
+  .hero { --k: var(--intro-speed, 1); }
+
+  /* 1) ხაზები ირბენს თანმიმდევრობით */
+  :global(html.lights-off) .is-on .hero__lights path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset calc(0.7s * var(--k)) cubic-bezier(0.6, 0, 0.2, 1)
+      calc((0.25s + var(--i) * 0.07s) * var(--k));
+  }
+  :global(html.lights-off) .is-on .hero__spots circle {
+    opacity: 1;
+    transition: opacity calc(0.4s * var(--k)) ease calc((0.9s + var(--i) * 0.08s) * var(--k));
+  }
+  /* 2) ოთახი ნათდება */
+  :global(html.lights-off) .is-on .hero__img {
+    filter: brightness(1) saturate(1);
+    transition: filter calc(1.1s * var(--k)) cubic-bezier(0.3, 0, 0.2, 1) calc(1.15s * var(--k));
+  }
+  /* 3) SVG ხაზები ქრება — ფოტოს საკუთარი ნათურები რჩება */
+  :global(html.lights-off) .is-on .hero__lights {
+    opacity: 0;
+    transition: opacity calc(0.9s * var(--k)) ease calc(2s * var(--k));
+  }
+  /* 4) ტექსტი ჩნდება */
+  :global(html.lights-off) .is-on .hero__content {
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity calc(0.8s * var(--k)) ease calc(1.6s * var(--k)),
+      translate calc(0.8s * var(--k)) var(--ease) calc(1.6s * var(--k));
+  }
+
+  /* ---------- Stats ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-bottom: 1px solid var(--c-line);
+  }
+  .stats__item {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--sp-1);
+    padding: var(--sp-5) var(--sp-4) var(--sp-5) 0;
+  }
+  .stats__item:nth-child(n + 3) { border-top: 1px solid var(--c-line); }
+  .stats__item:nth-child(2n) { padding-left: var(--sp-4); border-left: 1px solid var(--c-line); }
+  .stats__value { font-size: var(--fs-2xl); font-weight: 300; font-variant-numeric: tabular-nums; }
+  .stats__label { font-size: var(--fs-sm); }
+
+  @media (min-width: 1024px) {
+    .stats { grid-template-columns: repeat(4, 1fr); }
+    .stats__item { padding: var(--sp-6) var(--sp-5) !important; border-top: 0 !important; }
+    .stats__item:first-child { padding-left: 0 !important; }
+    .stats__item + .stats__item { border-left: 1px solid var(--c-line); }
+  }
+</style>
+
+<script>
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const img = hero?.querySelector<HTMLImageElement>('[data-hero-img]');
+  const root = document.documentElement;
+
+  const start = () => {
+    if (!hero || hero.classList.contains('is-on')) return;
+    // სტილების იძულებითი გადათვლა — ბრაუზერმა ჯერ ჩაბნელებული მდგომარეობა უნდა „დაიმახსოვროს“,
+    // რომ transition-ები ნამდვილად ითამაშოს (rAF-ს აღარ ვიყენებთ — ფონურ ტაბში ჩერდება).
+    void hero.getBoundingClientRect();
+    hero.classList.add('is-on');
+    // ტემპი იგივე ცვლადიდან, რაც CSS-ში (--intro-speed)
+    const k = parseFloat(getComputedStyle(root).getPropertyValue('--intro-speed')) || 1;
+    // საიტიც „ნათდება“, როცა ოთახი ინთება
+    window.setTimeout(() => root.classList.add('site-lit'), 1300 * k);
+    window.setTimeout(() => root.classList.remove('lights-off', 'site-lit'), 3200 * k);
+  };
+
+  // ფონურ ტაბში გახსნისას ანიმაცია ელოდება, სანამ მომხმარებელი ტაბზე გადავა
+  const turnOn = () => {
+    if (document.visibilityState === 'visible') window.setTimeout(start, 120);
+    else document.addEventListener('visibilitychange', () => window.setTimeout(start, 120), { once: true });
+  };
+
+  // dev-only: ?intro=hold — ჩაბნელებული მდგომარეობის გაყინვა შესამოწმებლად
+  const hold = import.meta.env.DEV && new URLSearchParams(location.search).get('intro') === 'hold';
+
+  if (root.classList.contains('lights-off') && img && !hold) {
+    if (img.complete && img.naturalWidth) turnOn();
+    else {
+      img.addEventListener('load', turnOn, { once: true });
+      img.addEventListener('error', turnOn, { once: true });
+      window.setTimeout(turnOn, 2500); // სუსტი ინტერნეტი — მაინც ავანთოთ
+    }
+  }
+</script>

@@ -1,0 +1,42 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import { processSteps } from '../../data/content';
+---
+
+<section class="section" id="process">
+  <div class="container">
+    <SectionHeading index="07" label="პროცესი" title="როგორ ვმუშაობთ" />
+    <ol role="list" class="steps">
+      {processSteps.map((s, i) => (
+        <li class="step">
+          <span class="step__num">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="step__title">{s.title}</h3>
+          <p class="muted">{s.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .steps { display: grid; border-left: 1px solid var(--c-line); }
+  .step { position: relative; display: grid; gap: var(--sp-2); padding: 0 0 var(--sp-6) var(--sp-5); }
+  .step::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 0.35em;
+    width: 9px;
+    height: 9px;
+    background: var(--c-ink);
+  }
+  .step__num { font-size: var(--fs-xs); color: var(--c-muted); letter-spacing: 0.08em; }
+  .step__title { font-size: var(--fs-xl); }
+  .step p { font-size: var(--fs-sm); }
+
+  @media (min-width: 1024px) {
+    .steps { grid-template-columns: repeat(5, 1fr); border-left: 0; border-top: 1px solid var(--c-line); }
+    .step { padding: var(--sp-5) var(--sp-4) 0 0; }
+    .step::before { left: 0; top: -5px; }
+  }
+</style>

@@ -1,0 +1,22 @@
+{
+  "name": "keraceiling",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "cf:dev": "astro build && wrangler pages dev dist --port 8788",
+    "db:migrate:local": "wrangler d1 migrations apply keraceiling-reviews --local",
+    "db:migrate:remote": "wrangler d1 migrations apply keraceiling-reviews --remote",
+    "deploy": "astro build && wrangler pages deploy dist"
+  },
+  "dependencies": {
+    "astro": "7.4.1"
+  },
+  "devDependencies": {
+    "wrangler": "^4.168.0"
+  }
+}

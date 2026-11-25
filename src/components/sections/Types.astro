@@ -1,0 +1,53 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import { ceilingTypes } from '../../data/content';
+import prices from '../../data/prices.json';
+import SwipeBar from '../SwipeBar.astro';
+---
+
+<section class="section" id="types">
+  <div class="container">
+    <SectionHeading
+      index="01"
+      label="ტიპები"
+      title="ჭერის ტიპები"
+      lead="აირჩიეთ ფაქტურა და ეფექტი — ფასი მითითებულია კვადრატულ მეტრზე."
+    />
+
+    <ul role="list" class="types swipe" aria-label="ჭერის ტიპები — გადაფურცლეთ გვერდულად">
+      {ceilingTypes.map((t) => (
+        <li class="type">
+          <div class="ph" style="--ph-ratio: 4 / 3">{t.title}</div>
+          <div class="type__body">
+            <h3 class="type__title">{t.title}</h3>
+            <p class="type__text muted">{t.text}</p>
+            <p class="type__price">{t.priceFrom} {prices.currency}/მ²-დან</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <SwipeBar />
+  </div>
+</section>
+
+<style>
+  .types {
+    display: grid;
+    gap: 1px;
+    background: var(--c-line);
+    border: 1px solid var(--c-line);
+  }
+  .type { background: var(--c-bg); display: grid; align-content: start; }
+  .type__body { display: grid; gap: var(--sp-2); padding: var(--sp-5); }
+  .type__title { font-size: var(--fs-xl); }
+  .type__text { font-size: var(--fs-sm); }
+  .type__price { margin-top: var(--sp-2); font-size: var(--fs-sm); font-weight: 500; }
+
+  /* ტელეფონზე ბარათები ცალ-ცალკეა (გალერეა), ამიტომ საერთო 1px ბადის ნაცვლად თითოეულს თავისი ჩარჩო აქვს */
+  @media (max-width: 639px) {
+    .types { background: none; border: 0; }
+    .type { border: 1px solid var(--c-line); }
+  }
+  @media (min-width: 640px) { .types { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .types { grid-template-columns: repeat(4, 1fr); } }
+</style>

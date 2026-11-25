@@ -1,0 +1,115 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import { faq } from '../../data/content';
+---
+
+<section class="section" id="faq">
+  <div class="container faq-wrap">
+    <SectionHeading index="08" label="კითხვები" title="ხშირად დასმული კითხვები" />
+    <div class="faq" data-faq>
+      {faq.map((f) => (
+        <details class="faq__item" data-faq-item>
+          <summary class="faq__q">{f.q}</summary>
+          <div class="faq__body" data-faq-body>
+            <p class="faq__a muted">{f.a}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq { border-top: 1px solid var(--c-ink); }
+  .faq__item { border-bottom: 1px solid var(--c-line); }
+  .faq__q {
+    position: relative;
+    display: block;
+    padding: var(--sp-5) var(--sp-7) var(--sp-5) 0;
+    font-size: var(--fs-lg);
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq__q::-webkit-details-marker { display: none; }
+  .faq__q::after {
+    content: '+';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    translate: 0 -50%;
+    font-size: var(--fs-xl);
+    font-weight: 300;
+    transition: rotate 320ms var(--ease);
+  }
+  /* is-open — ემატება ანიმაციის დაწყებისთანავე, რომ „+“ ტექსტთან ერთად შემობრუნდეს */
+  .faq__item.is-open .faq__q::after { rotate: 45deg; }
+  .faq__body { overflow: hidden; }
+  .faq__a { padding-bottom: var(--sp-5); max-width: 65ch; }
+
+  @media (min-width: 1024px) {
+    .faq-wrap { display: grid; grid-template-columns: 1fr 1.6fr; gap: var(--sp-8); align-items: start; }
+  }
+</style>
+
+<script>
+  // აკორდეონი: გაშლა/დაკეცვა ანიმაციით; ახლის გაშლისას წინა ავტომატურად იკეცება.
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const DURATION = 320;
+  const EASING = 'cubic-bezier(0.2, 0.7, 0.2, 1)';
+
+  const items = [...document.querySelectorAll<HTMLDetailsElement>('[data-faq-item]')];
+  const running = new WeakMap<HTMLDetailsElement, Animation>();
+
+  const animate = (item: HTMLDetailsElement, open: boolean) => {
+    const body = item.querySelector<HTMLElement>('[data-faq-body]');
+    if (!body) return;
+
+    item.classList.toggle('is-open', open);
+    running.get(item)?.cancel();
+
+    if (reduceMotion.matches) {
+      item.open = open;
+      return;
+    }
+
+    // მიმდინარე სიმაღლიდან (შეიძლება შუა ანიმაციაში ვიყოთ) სამიზნემდე
+    const from = item.open ? body.offsetHeight : 0;
+    if (open) item.open = true;
+    const to = open ? body.scrollHeight : 0;
+
+    const anim = body.animate(
+      [
+        { height: `${from}px`, opacity: open ? 0 : 1 },
+        { height: `${to}px`, opacity: open ? 1 : 0 },
+      ],
+      { duration: DURATION, easing: EASING },
+    );
+    running.set(item, anim);
+
+    // დასრულება: ანიმაციის ბოლოს, ან (თუ ბრაუზერმა ანიმაცია შეაჩერა, მაგ. ფონურ ტაბში) ტაიმერით
+    let done = false;
+    const finish = () => {
+      if (done || running.get(item) !== anim) return;
+      done = true;
+      running.delete(item);
+      anim.cancel();
+      if (!open) item.open = false;
+    };
+    anim.onfinish = finish;
+    window.setTimeout(finish, DURATION + 80);
+  };
+
+  items.forEach((item) => {
+    item.classList.toggle('is-open', item.open);
+    item.querySelector('summary')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const willOpen = !item.classList.contains('is-open');
+      if (willOpen) {
+        items.forEach((other) => {
+          if (other !== item && other.classList.contains('is-open')) animate(other, false);
+        });
+      }
+      animate(item, willOpen);
+    });
+  });
+</script>

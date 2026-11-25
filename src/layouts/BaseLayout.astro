@@ -1,0 +1,101 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+import Logo from '../components/Logo.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** „ნათურების ანთების“ ინტრო (მხოლოდ მთავარ გვერდზე) */
+  intro?: boolean;
+  /** საძიებო სისტემებმა გვერდი არ დაინდექსონ (მაგ. დამალული შეფასების გვერდი) */
+  noindex?: boolean;
+  /** მინიმალური გვერდი: მხოლოდ ლოგო, მენიუს/ფუტერის/ქვედა ზოლის გარეშე */
+  bare?: boolean;
+}
+
+const { title, description = site.description, intro = false, noindex = false, bare = false } = Astro.props;
+const fullTitle = title ? `${title} — ${site.name} ${site.nameSuffix}` : `${site.tagline} — ${site.name} ${site.nameSuffix}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="ka">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonical} />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#f4f4f2" />
+
+    {intro && (
+      <script is:inline>
+        (function () {
+          try {
+            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduce || location.hash) return;
+            var root = document.documentElement;
+            root.classList.add('lights-off');
+            // დაზღვევა: თუ რამე ჩაიშალა, საიტი ბნელში არ დარჩეს.
+            // ტაიმერი იწყება მხოლოდ მაშინ, როცა ტაბი ხილულია (ფონურ ტაბში ანიმაცია ელოდება).
+            var arm = function () {
+              setTimeout(function () { root.classList.remove('lights-off', 'site-lit'); }, 10000);
+            };
+            if (document.visibilityState === 'visible') arm();
+            else document.addEventListener('visibilitychange', arm, { once: true });
+          } catch (e) {}
+        })();
+      </script>
+    )}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="ka_GE" />
+
+    <!-- შრიფტი: დროებით Noto Sans Georgian. FiraGO-ზე გადასვლისას self-host /public/fonts-ში -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class:list={{ 'is-bare': bare }}>
+    <a class="skip-link" href="#main">გადასვლა მთავარ შიგთავსზე</a>
+    {bare ? (
+      <header class="bare-header">
+        <div class="container bare-header__inner"><Logo /></div>
+      </header>
+    ) : (
+      <Header />
+    )}
+    <main id="main">
+      <slot />
+    </main>
+    {!bare && <Footer />}
+    {!bare && <MobileBar />}
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: var(--gutter);
+    top: -100px;
+    z-index: 100;
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-ink);
+    color: var(--c-bg);
+  }
+  .skip-link:focus { top: var(--sp-2); }
+  .bare-header { border-bottom: 1px solid var(--c-line); }
+  .bare-header__inner { display: flex; align-items: center; height: var(--header-h); }
+  :global(body.is-bare) { padding-bottom: 0; }
+</style>

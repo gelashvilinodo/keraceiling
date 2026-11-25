@@ -1,0 +1,205 @@
+---
+// დამალული გვერდი: საიტზე მასზე ბმული არ არის, საძიებო სისტემები არ ინდექსირებენ.
+// დამკვეთი ბმულს (https://<დომენი>/review) სამუშაოს დასრულების შემდეგ უგზავნის მომხმარებელს.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const rooms = ['მისაღები', 'საძინებელი', 'სამზარეულო', 'აბაზანა', 'საბავშვო', 'დერეფანი', 'ოფისი', 'სხვა'];
+const ratingLabels = ['ძალიან ცუდი', 'ცუდი', 'საშუალო', 'კარგი', 'შესანიშნავი'];
+---
+
+<BaseLayout title="შეაფასეთ სამუშაო" description="შეაფასეთ შესრულებული სამუშაო" noindex bare>
+  <section class="section rv">
+    <div class="container rv__inner">
+      <header class="rv__head">
+        <p class="rv__eyebrow muted">შეფასება</p>
+        <h1 class="rv__title">როგორ მოგეწონათ შესრულებული სამუშაო?</h1>
+        <p class="rv__lead muted">
+          მადლობა, რომ აგვირჩიეთ. თქვენი შეფასება გვეხმარება, უკეთესები ვიყოთ, და სხვებსაც აძლევს არჩევანის გაკეთების საშუალებას.
+        </p>
+      </header>
+
+      <form class="rv__form" data-review-form novalidate>
+        <!-- 1. ვარსკვლავები -->
+        <fieldset class="rv__field">
+          <legend class="field__label">თქვენი შეფასება</legend>
+          <div class="stars" data-stars>
+            {[5, 4, 3, 2, 1].map((n) => (
+              <>
+                <input class="stars__input" type="radio" name="rating" id={`star-${n}`} value={n} required />
+                <label class="stars__star" for={`star-${n}`} title={ratingLabels[n - 1]}>
+                  <span class="visually-hidden">{n} ვარსკვლავი — {ratingLabels[n - 1]}</span>
+                  <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true">
+                    <path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4L2.8 9.5l6.4-.8z" />
+                  </svg>
+                </label>
+              </>
+            ))}
+          </div>
+          <p class="rv__hint muted" data-stars-label aria-live="polite">აირჩიეთ 1-დან 5 ვარსკვლავამდე</p>
+        </fieldset>
+
+        <!-- 2. ტექსტი -->
+        <label class="field rv__field">
+          <span class="field__label">თქვენი შთაბეჭდილება</span>
+          <textarea
+            class="textarea rv__textarea"
+            name="text"
+            rows="5"
+            minlength="10"
+            maxlength="1000"
+            required
+            placeholder="მაგალითად: რამდენ ხანში დასრულდა სამუშაო, როგორ მოგეწონათ შედეგი და გუნდის მუშაობა…"
+          ></textarea>
+          <span class="rv__count muted" data-count>0 / 1000</span>
+        </label>
+
+        <!-- 3. სახელი -->
+        <label class="field rv__field">
+          <span class="field__label">სახელი</span>
+          <input class="input" name="name" type="text" minlength="2" maxlength="60" autocomplete="given-name" required placeholder="მაგ. ნინო გ." />
+          <span class="rv__hint muted">საიტზე ეს სახელი გამოჩნდება. შეგიძლიათ მიუთითოთ მხოლოდ სახელი და გვარის პირველი ასო.</span>
+        </label>
+
+        <!-- 4. დამატებით (არასავალდებულო) -->
+        <div class="rv__row">
+          <label class="field">
+            <span class="field__label">ოთახი <span class="muted">(არასავალდებულო)</span></span>
+            <select class="select" name="room">
+              <option value="">— აირჩიეთ —</option>
+              {rooms.map((r) => <option value={r}>{r}</option>)}
+            </select>
+          </label>
+          <label class="field">
+            <span class="field__label">უბანი <span class="muted">(არასავალდებულო)</span></span>
+            <input class="input" name="district" type="text" maxlength="60" placeholder="მაგ. ვაკე" />
+          </label>
+        </div>
+
+        <!-- ბოტებისგან დაცვა: ადამიანი ამ ველს ვერ ხედავს -->
+        <div class="rv__trap" aria-hidden="true">
+          <label>ვებგვერდი <input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <p class="rv__error" role="alert" data-error hidden></p>
+
+        <button class="btn btn--primary btn--block rv__submit" type="submit" data-submit>შეფასების გაგზავნა</button>
+        <p class="rv__hint muted">შეფასება საიტზე გამოჩნდება მას შემდეგ, რაც კომპანია მას გადახედავს.</p>
+      </form>
+
+      <div class="rv__done" data-done hidden tabindex="-1">
+        <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="M15 24.5l6 6 12-13" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+        <h2 class="rv__title">მადლობა შეფასებისთვის!</h2>
+        <p class="muted">თქვენი შეფასება მიღებულია და საიტზე გამოჩნდება გადამოწმების შემდეგ.</p>
+        <a class="btn btn--ghost" href="/">საიტზე გადასვლა</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .rv__inner { max-width: 640px; display: grid; gap: var(--sp-6); }
+  .rv__head { display: grid; gap: var(--sp-3); }
+  .rv__eyebrow { font-size: var(--fs-xs); letter-spacing: 0.1em; text-transform: uppercase; }
+  .rv__title { font-size: var(--fs-2xl); font-weight: 300; }
+  .rv__lead { font-size: var(--fs-base); }
+
+  .rv__form { display: grid; gap: var(--sp-5); }
+  .rv__field { border: 0; padding: 0; min-width: 0; }
+  .rv__row { display: grid; gap: var(--sp-5); }
+  @media (min-width: 560px) { .rv__row { grid-template-columns: 1fr 1fr; } }
+  .rv__textarea { min-height: 140px; resize: vertical; padding-block: var(--sp-3); line-height: var(--lh-base); }
+  .rv__count { justify-self: end; font-size: var(--fs-xs); }
+  .rv__hint { font-size: var(--fs-xs); }
+  .rv__error { padding: var(--sp-3) var(--sp-4); border: 1px solid #a3362b; color: #a3362b; font-size: var(--fs-sm); }
+  .rv__submit { min-height: 52px; }
+  .rv__submit[disabled] { opacity: 0.6; cursor: progress; }
+  .rv__trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+  .rv__done { display: grid; gap: var(--sp-4); justify-items: start; padding-block: var(--sp-6); }
+  .rv__done:focus { outline: none; }
+
+  /* ---- ვარსკვლავები: row-reverse, რომ hover/არჩევა მარცხნიდან ივსებოდეს ---- */
+  .stars { display: inline-flex; flex-direction: row-reverse; justify-content: flex-end; gap: 4px; margin-block: var(--sp-2); }
+  .stars__input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .stars__star { display: grid; place-items: center; width: 48px; height: 48px; cursor: pointer; color: var(--c-line-strong); }
+  .stars__star svg { fill: transparent; stroke: currentColor; stroke-width: 1.2; transition: fill var(--dur) var(--ease), transform var(--dur) var(--ease); }
+  .stars__input:checked ~ .stars__star svg,
+  .stars__star:hover svg,
+  .stars__star:hover ~ .stars__star svg { fill: #c9a86f; stroke: #a5874f; }
+  .stars__star:hover svg { transform: scale(1.08); }
+  .stars:has(.stars__star:hover) .stars__input:checked ~ .stars__star:not(:hover):not(.stars__star:hover ~ .stars__star) svg { fill: transparent; stroke: currentColor; }
+  .stars__input:focus-visible + .stars__star { outline: 2px solid var(--c-ink); outline-offset: 2px; }
+
+  :global(.visually-hidden) {
+    position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-review-form]');
+  const done = document.querySelector<HTMLElement>('[data-done]');
+  const errorBox = document.querySelector<HTMLElement>('[data-error]');
+  const submit = document.querySelector<HTMLButtonElement>('[data-submit]');
+  const count = document.querySelector<HTMLElement>('[data-count]');
+  const starsLabel = document.querySelector<HTMLElement>('[data-stars-label]');
+  const labels = ['ძალიან ცუდი', 'ცუდი', 'საშუალო', 'კარგი', 'შესანიშნავი'];
+  const openedAt = Date.now();
+
+  const showError = (msg: string, field?: string) => {
+    if (!errorBox) return;
+    errorBox.textContent = msg;
+    errorBox.hidden = false;
+    const el = field ? form?.querySelector<HTMLElement>(`[name="${field}"]`) : null;
+    (el ?? errorBox).focus?.();
+    if (!el) errorBox.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  };
+
+  form?.querySelectorAll<HTMLInputElement>('input[name="rating"]').forEach((r) =>
+    r.addEventListener('change', () => {
+      if (starsLabel) starsLabel.textContent = `${r.value} / 5 — ${labels[Number(r.value) - 1]}`;
+    }),
+  );
+
+  const textarea = form?.querySelector<HTMLTextAreaElement>('textarea[name="text"]');
+  textarea?.addEventListener('input', () => {
+    if (count) count.textContent = `${textarea.value.length} / 1000`;
+  });
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form || !submit) return;
+    errorBox && (errorBox.hidden = true);
+
+    const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+
+    // სწრაფი შემოწმება ბრაუზერში (სერვერიც ამოწმებს)
+    if (!data.rating) return showError('გთხოვთ, აირჩიოთ შეფასება (ვარსკვლავები).', 'rating');
+    if ((data.text ?? '').trim().length < 10) return showError('გთხოვთ, დაწეროთ რამდენიმე სიტყვა (მინიმუმ 10 სიმბოლო).', 'text');
+    if ((data.name ?? '').trim().length < 2) return showError('გთხოვთ, მიუთითოთ სახელი.', 'name');
+
+    submit.disabled = true;
+    submit.textContent = 'იგზავნება…';
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ ...data, rating: Number(data.rating), t: openedAt }),
+      });
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok || !out.ok) throw Object.assign(new Error(out.error || 'send failed'), { field: out.field, user: !!out.error });
+      form.hidden = true;
+      if (done) {
+        done.hidden = false;
+        done.focus();
+        done.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      }
+    } catch (err) {
+      const e = err as Error & { field?: string; user?: boolean };
+      showError(e.user ? e.message : 'გაგზავნა ვერ მოხერხდა. შეამოწმეთ ინტერნეტი და სცადეთ თავიდან.', e.field);
+    } finally {
+      submit.disabled = false;
+      submit.textContent = 'შეფასების გაგზავნა';
+    }
+  });
+</script>

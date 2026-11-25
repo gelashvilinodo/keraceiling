@@ -1,0 +1,78 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import { site, whatsappLink } from '../../data/site';
+---
+
+<section class="section section--inverse" id="contact">
+  <div class="container contact">
+    <div>
+      <SectionHeading
+        index="09"
+        label="კონტაქტი"
+        title="დაჯავშნეთ უფასო კონსულტაცია"
+        lead="დაგვიტოვეთ ნომერი და დაგიკავშირდებით სამუშაო საათებში."
+      />
+      <ul role="list" class="contact__list">
+        <li><span class="muted">ტელეფონი</span><a href={site.phoneHref}>{site.phone}</a></li>
+        <li><span class="muted">WhatsApp</span><a href={whatsappLink()} target="_blank" rel="noopener">მოგვწერეთ</a></li>
+        <li><span class="muted">ელ. ფოსტა</span><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li><span class="muted">მისამართი</span><span>{site.address}</span></li>
+        <li><span class="muted">საათები</span><span>{site.hours}</span></li>
+        <li><span class="muted">ზონა</span><span>{site.area}</span></li>
+      </ul>
+    </div>
+
+    <!-- TODO: ფორმა დასაკავშირებელია (Web3Forms / Formspree / Telegram) -->
+    <form class="form" data-contact-form novalidate>
+      <label class="field">
+        <span class="field__label">სახელი</span>
+        <input class="input" name="name" autocomplete="name" required />
+      </label>
+      <label class="field">
+        <span class="field__label">ტელეფონი</span>
+        <input class="input" name="phone" type="tel" inputmode="tel" autocomplete="tel" required />
+      </label>
+      <label class="field">
+        <span class="field__label">კომენტარი</span>
+        <textarea class="textarea" name="message" rows="4"></textarea>
+      </label>
+      <button class="btn btn--primary btn--block" type="submit">გაგზავნა</button>
+      <p class="form__status muted" role="status" data-form-status></p>
+    </form>
+  </div>
+</section>
+
+<style>
+  .contact { display: grid; gap: var(--sp-7); }
+  .contact__list { border-top: 1px solid var(--c-line); }
+  .contact__list li {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: var(--sp-3);
+    padding-block: var(--sp-3);
+    border-bottom: 1px solid var(--c-line);
+    font-size: var(--fs-sm);
+  }
+  .contact__list a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .form { display: grid; gap: var(--sp-4); align-content: start; }
+  .form__status { font-size: var(--fs-sm); min-height: 1.5em; }
+
+  @media (min-width: 1024px) {
+    .contact { grid-template-columns: 1fr 1fr; gap: var(--sp-8); }
+    .form { padding-top: calc(var(--sp-8) + var(--sp-4)); }
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  const status = form?.querySelector<HTMLElement>('[data-form-status]');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      status!.textContent = 'გთხოვთ, შეავსოთ სახელი და ტელეფონი.';
+      return;
+    }
+    // TODO: რეალური გაგზავნა
+    status!.textContent = 'ფორმა ჯერ არ არის დაკავშირებული (დემო).';
+  });
+</script>

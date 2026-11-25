@@ -1,0 +1,65 @@
+/* ==========================================================
+   დიზაინის ტოკენები — ყველა ფერი, ზომა და შრიფტი აქ იცვლება
+   ========================================================== */
+:root {
+  /* ფერები — მონოქრომული */
+  --c-bg: #f4f4f2;          /* ფონი, „ჭერის ფერი“ */
+  --c-surface: #ffffff;     /* ბარათები, ველები */
+  --c-ink: #0e0e0e;         /* ძირითადი ტექსტი */
+  --c-muted: #6b6b6b;       /* მეორადი ტექსტი */
+  --c-line: #d9d9d6;        /* ხაზები */
+  --c-line-strong: #0e0e0e;
+  --c-inverse-bg: #0e0e0e;  /* მუქი სექციები */
+  --c-inverse-ink: #f4f4f2;
+  --c-inverse-muted: #9a9a96;
+  --c-inverse-line: #2a2a2a;
+
+  /* შრიფტი — FiraGO-ზე გადასვლისას მხოლოდ აქ შეიცვლება */
+  --font-sans: 'Noto Sans Georgian', 'Noto Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* ტიპოგრაფიის სკალა (mobile-first, ფლუიდური) */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --fs-2xl: clamp(1.75rem, 1.4rem + 1.6vw, 2.75rem);
+  --fs-3xl: clamp(2.25rem, 1.6rem + 3.2vw, 4.5rem);
+
+  --lh-tight: 1.15;
+  --lh-base: 1.6;
+
+  /* სივრცეები */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --section-y: clamp(3.5rem, 2.5rem + 5vw, 8rem);
+
+  /* განლაგება */
+  --container: 1320px;
+  --gutter: 16px;
+  --header-h: 64px;
+  --mobilebar-h: 56px;
+
+  /* მომრგვალება — არსად */
+  --radius: 0;
+
+  /* ჰეროს „ნათურების ანთების“ ტემპი: 1 = სწრაფი (≈3 წმ), 1.7 = ≈5 წმ. მეტი რიცხვი = უფრო ნელი */
+  --intro-speed: 1.7;
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur: 220ms;
+}
+
+/* Breakpoints: 768 / 1024 / 1440 (min-width, mobile-first) */
+@media (min-width: 768px) {
+  :root { --gutter: 32px; }
+}
+@media (min-width: 1024px) {
+  :root { --gutter: 48px; --header-h: 80px; }
+}

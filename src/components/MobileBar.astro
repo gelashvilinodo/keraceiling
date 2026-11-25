@@ -1,0 +1,46 @@
+---
+import { site, whatsappLink } from '../data/site';
+---
+
+<nav class="mobilebar" aria-label="სწრაფი კონტაქტი">
+  <a class="mobilebar__item" href={site.phoneHref}>
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    დარეკვა
+  </a>
+  <a class="mobilebar__item" href={whatsappLink('გამარჯობა! მაინტერესებს გასაჭიმი ჭერი.')} target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    WhatsApp
+  </a>
+  <a class="mobilebar__item mobilebar__item--primary" href="#calculator">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 3h14v18H5zM8 7h8M8 12h2M14 12h2M8 16h2M14 16h2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    ფასი
+  </a>
+</nav>
+
+<style>
+  .mobilebar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--c-bg);
+    border-top: 1px solid var(--c-line);
+  }
+  .mobilebar__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+    height: var(--mobilebar-h);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+  }
+  .mobilebar__item + .mobilebar__item { border-left: 1px solid var(--c-line); }
+  .mobilebar__item--primary { background: var(--c-ink); color: var(--c-bg); border-left-color: var(--c-ink) !important; }
+
+  @media (min-width: 1024px) {
+    .mobilebar { display: none; }
+  }
+</style>

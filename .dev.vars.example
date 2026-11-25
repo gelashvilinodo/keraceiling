@@ -1,0 +1,6 @@
+# დააკოპირეთ ეს ფაილი როგორც .dev.vars (ის git-ში არ ინახება) და შეავსეთ.
+# Cloudflare-ზე იგივე მნიშვნელობები: Pages → Settings → Variables and Secrets.
+REVIEW_SECRET=change-me-to-a-long-random-string
+ADMIN_KEY=change-me-admin-password
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_CHAT_ID=

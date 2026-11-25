@@ -1,0 +1,33 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import { benefits } from '../../data/content';
+---
+
+<section class="section section--inverse" id="benefits">
+  <div class="container">
+    <SectionHeading index="06" label="უპირატესობები" title="რატომ გასაჭიმი ჭერი" />
+    <ul role="list" class="benefits">
+      {benefits.map((b) => (
+        <li class="benefit">
+          <h3 class="benefit__title">{b.title}</h3>
+          <p class="muted">{b.text}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .benefits { display: grid; border-top: 1px solid var(--c-line); }
+  .benefit { display: grid; gap: var(--sp-2); padding-block: var(--sp-5); border-bottom: 1px solid var(--c-line); }
+  .benefit__title { font-size: var(--fs-xl); }
+  .benefit p { font-size: var(--fs-sm); max-width: 38ch; }
+
+  @media (min-width: 768px) {
+    .benefits { grid-template-columns: repeat(2, 1fr); column-gap: var(--sp-6); }
+  }
+  @media (min-width: 1024px) {
+    .benefits { grid-template-columns: repeat(3, 1fr); }
+    .benefit { padding-block: var(--sp-6); }
+  }
+</style>

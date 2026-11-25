@@ -1,0 +1,68 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import { lighting } from '../../data/content';
+---
+
+<section class="section section--inverse" id="lighting">
+  <div class="container">
+    <SectionHeading
+      index="02"
+      label="განათება"
+      title="განათება, რომელიც ჭერის ნაწილია"
+      lead="სანათი ხაზები, მცურავი ეფექტი და დამალული ნიშები."
+    />
+
+    <div class="lighting">
+      <!-- TODO: ფოტო დროებითია (Unsplash, უფასო ლიცენზია) — ჩანაცვლდება დამკვეთის ფოტოთი -->
+      <img
+        class="lighting__media"
+        src="/images/lighting/lighting-1600.jpg"
+        srcset="/images/lighting/lighting-800.jpg 800w, /images/lighting/lighting-1600.jpg 1600w"
+        sizes="(min-width: 1416px) 740px, (min-width: 1024px) 55vw, (min-width: 768px) calc(100vw - 64px), calc(100vw - 32px)"
+        width="1600"
+        height="1000"
+        alt="მისაღები ოთახი საღამოს — ჭერში ჩაშენებული განათებული ნიშა და სანათი ხაზები"
+        loading="lazy"
+        decoding="async"
+      />
+      <ol role="list" class="lighting__list">
+        {lighting.map((l, i) => (
+          <li class="lighting__item">
+            <span class="lighting__num muted">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h3 class="lighting__title">{l.title}</h3>
+              <p class="muted">{l.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lighting { display: grid; gap: var(--sp-6); }
+  .lighting__media {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    background: #1c1c1c;
+  }
+  .lighting__list { border-top: 1px solid var(--c-line); }
+  .lighting__item {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: var(--sp-3);
+    padding-block: var(--sp-5);
+    border-bottom: 1px solid var(--c-line);
+  }
+  .lighting__num { font-size: var(--fs-xs); padding-top: 0.4em; }
+  .lighting__title { font-size: var(--fs-xl); margin-bottom: var(--sp-1); }
+  .lighting__item p { font-size: var(--fs-sm); }
+
+  @media (min-width: 1024px) {
+    .lighting { grid-template-columns: 1.3fr 1fr; gap: var(--sp-8); align-items: start; }
+  }
+</style>

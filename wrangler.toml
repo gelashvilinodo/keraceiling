@@ -1,0 +1,19 @@
+# Cloudflare Pages — საიტი (dist/) + Pages Functions (functions/) + D1 ბაზა შეფასებებისთვის.
+# დაყენების ინსტრუქცია: README.md → „შეფასებები (Cloudflare)“.
+name = "keraceiling"
+compatibility_date = "2025-11-01"
+pages_build_output_dir = "./dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "keraceiling-reviews"
+# TODO: ჩაანაცვლეთ `npx wrangler d1 create keraceiling-reviews`-ის მიერ მოცემული ID-ით
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+# საიდუმლო მნიშვნელობები აქ არ იწერება. Cloudflare-ში: Settings → Variables and Secrets,
+# ლოკალურად: .dev.vars ფაილი (იხ. .dev.vars.example).
+#   REVIEW_SECRET       — ხელმოწერის გასაღები (გრძელი შემთხვევითი სტრიქონი)
+#   ADMIN_KEY           — ადმინ-გვერდის პაროლი (/api/reviews/admin)
+#   TELEGRAM_BOT_TOKEN  — (სურვილისამებრ) შეტყობინებები ახალ შეფასებაზე
+#   TELEGRAM_CHAT_ID    — (სურვილისამებრ) ვისთან მივიდეს შეტყობინება

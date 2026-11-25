@@ -1,0 +1,25 @@
+{
+  "_note": "ფლეისჰოლდერი ფასები! ჩანაცვლდება დამკვეთის პასუხების შემდეგ (კითხვარი, ბლოკი „გ“).",
+  "currency": "₾",
+  "rangeSpread": 0.07,
+  "minOrder": 300,
+  "canvas": [
+    { "id": "matte", "label": "მატი", "pricePerM2": 25 },
+    { "id": "satin", "label": "სატინი", "pricePerM2": 28 },
+    { "id": "glossy", "label": "პრიალა", "pricePerM2": 30 },
+    { "id": "fabric", "label": "ქსოვილის", "pricePerM2": 55 }
+  ],
+  "profile": [
+    { "id": "standard", "label": "სტანდარტული", "pricePerM": 0 },
+    { "id": "shadow", "label": "ჩრდილის", "pricePerM": 20 },
+    { "id": "floating", "label": "მცურავი (LED)", "pricePerM": 45 }
+  ],
+  "extras": [
+    { "id": "spot", "label": "სპოტ-სანათი", "unit": "ცალი", "price": 15, "step": 1 },
+    { "id": "chandelier", "label": "ჭაღის სამაგრი", "unit": "ცალი", "price": 20, "step": 1 },
+    { "id": "lightLine", "label": "სანათი ხაზი", "unit": "მ", "price": 90, "step": 0.5 },
+    { "id": "curtain", "label": "ფარდის ნიშა", "unit": "მ", "price": 40, "step": 0.5 },
+    { "id": "pipe", "label": "მილის შემოვლა", "unit": "ცალი", "price": 15, "step": 1 }
+  ],
+  "dismantle": { "label": "ძველი ჭერის მოხსნა", "pricePerM2": 5 }
+}

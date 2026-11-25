@@ -1,0 +1,260 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import prices from '../../data/prices.json';
+const cur = prices.currency;
+---
+
+<section class="section" id="calculator">
+  <div class="container">
+    <SectionHeading
+      index="04"
+      label="კალკულატორი"
+      title="გამოთვალეთ ფასი"
+      lead="შეიყვანეთ ოთახის ზომები და აირჩიეთ დამატებები. ზუსტი ფასი — უფასო კონსულტაციის შემდეგ."
+    />
+
+    <form class="calc" data-calc novalidate onsubmit="return false">
+      <div class="calc__form">
+        <!-- ოთახები -->
+        <fieldset class="calc__group">
+          <legend class="calc__legend">ოთახები</legend>
+          <div class="rooms" data-rooms></div>
+          <button type="button" class="btn btn--ghost btn--block" data-add-room>+ ოთახის დამატება</button>
+        </fieldset>
+
+        <!-- დამატებები -->
+        <fieldset class="calc__group">
+          <legend class="calc__legend">განათება და დამატებები</legend>
+          <div class="extras">
+            {prices.extras.map((x) => (
+              <div class="stepper-row">
+                <label class="stepper-row__label" for={`x-${x.id}`}>
+                  {x.label}
+                  <small class="muted">{x.price} {cur} / {x.unit}</small>
+                </label>
+                <div class="stepper">
+                  <button type="button" data-step="-1" aria-label={`${x.label} — შემცირება`}>−</button>
+                  <input
+                    id={`x-${x.id}`}
+                    type="number"
+                    inputmode="decimal"
+                    min="0"
+                    step={x.step}
+                    value="0"
+                    data-extra={x.id}
+                  />
+                  <button type="button" data-step="1" aria-label={`${x.label} — გაზრდა`}>+</button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <label class="check">
+            <input type="checkbox" data-dismantle />
+            <span>{prices.dismantle.label} <small class="muted">{prices.dismantle.pricePerM2} {cur}/მ²</small></span>
+          </label>
+        </fieldset>
+      </div>
+
+      <!-- შედეგი -->
+      <aside class="calc__summary" aria-live="polite">
+        <div class="calc__total-wrap">
+          <p class="calc__label muted">სავარაუდო ღირებულება</p>
+          <p class="calc__total" data-total>—</p>
+          <p class="calc__meta muted" data-meta></p>
+        </div>
+
+        <details class="calc__details">
+          <summary>დეტალები</summary>
+          <ul role="list" class="calc__breakdown" data-breakdown></ul>
+          <p class="calc__note muted">ფასები საორიენტაციოა. საბოლოო ღირებულება დგინდება უფასო კონსულტაციის შემდეგ.</p>
+        </details>
+
+        <a class="btn btn--primary btn--block calc__wa" href="#" target="_blank" rel="noopener" data-wa aria-label="გაგზავნე გათვლა WhatsApp-ზე">
+          <svg class="calc__wa-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span class="calc__wa-long">გაგზავნე WhatsApp-ზე</span>
+          <span class="calc__wa-short" aria-hidden="true">WhatsApp</span>
+        </a>
+      </aside>
+    </form>
+
+    <template data-room-tpl>
+      <div class="room" data-room>
+        <div class="room__head">
+          <p class="room__title">ოთახი <span data-room-num>1</span></p>
+          <button type="button" class="room__remove" data-remove-room>წაშლა</button>
+        </div>
+        <div class="room__grid">
+          <label class="field">
+            <span class="field__label">სიგრძე, მ</span>
+            <input class="input" type="number" inputmode="decimal" min="0" step="0.1" value="4" data-l />
+          </label>
+          <label class="field">
+            <span class="field__label">სიგანე, მ</span>
+            <input class="input" type="number" inputmode="decimal" min="0" step="0.1" value="3.5" data-w />
+          </label>
+          <label class="field room__full">
+            <span class="field__label">მასალა</span>
+            <select class="select" data-canvas>
+              {prices.canvas.map((c) => <option value={c.id}>{c.label} — {c.pricePerM2} {cur}/მ²</option>)}
+            </select>
+          </label>
+          <label class="field room__full">
+            <span class="field__label">პროფილი</span>
+            <select class="select" data-profile>
+              {prices.profile.map((p) => (
+                <option value={p.id}>{p.label}{p.pricePerM ? ` — +${p.pricePerM} ${cur}/მ` : ''}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <p class="room__meta muted">ფართი <b data-area>0</b> მ² · პერიმეტრი <b data-perim>0</b> მ</p>
+      </div>
+    </template>
+  </div>
+</section>
+
+<style>
+  .calc { display: grid; gap: var(--sp-6); align-items: start; }
+  .calc__form { display: grid; gap: var(--sp-6); }
+  .calc__group { border: 0; padding: 0; display: grid; gap: var(--sp-4); min-width: 0; }
+  .calc__legend {
+    padding: 0;
+    margin-bottom: var(--sp-4);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+
+  /* ოთახი */
+  .rooms { display: grid; gap: var(--sp-4); }
+  :global(.room) {
+    display: grid;
+    gap: var(--sp-4);
+    padding: var(--sp-5);
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+  }
+  :global(.room__head) { display: flex; justify-content: space-between; align-items: center; }
+  :global(.room__title) { font-weight: 500; }
+  :global(.room__remove) {
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    min-height: 44px;
+  }
+  :global(.room__remove:hover) { color: var(--c-ink); }
+  :global(.room__grid) { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+  :global(.room__full) { grid-column: 1 / -1; }
+  :global(.room__meta) { font-size: var(--fs-sm); }
+  :global(.room__meta b) { color: var(--c-ink); font-weight: 500; }
+
+  /* სტეპერები */
+  .extras { border-top: 1px solid var(--c-line); }
+  .stepper-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    padding-block: var(--sp-3);
+    border-bottom: 1px solid var(--c-line);
+  }
+  .stepper-row__label { display: grid; font-size: var(--fs-sm); }
+  .stepper-row__label small { font-size: var(--fs-xs); }
+  .stepper { display: flex; border: 1px solid var(--c-line); background: var(--c-surface); flex-shrink: 0; }
+  .stepper button {
+    width: 44px;
+    height: 44px;
+    font-size: var(--fs-lg);
+    transition: background var(--dur) var(--ease);
+  }
+  .stepper button:hover { background: var(--c-bg); }
+  .stepper input {
+    width: 52px;
+    text-align: center;
+    border: 0;
+    border-inline: 1px solid var(--c-line);
+    background: transparent;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .stepper input::-webkit-outer-spin-button,
+  .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+  .check { display: flex; gap: var(--sp-3); align-items: center; font-size: var(--fs-sm); min-height: 44px; cursor: pointer; }
+  .check input { width: 20px; height: 20px; accent-color: var(--c-ink); }
+  .check small { display: block; font-size: var(--fs-xs); }
+
+  /* შედეგი — მობაილზე მიმაგრებული ქვემოთ */
+  .calc__summary {
+    position: sticky;
+    bottom: calc(var(--mobilebar-h) + env(safe-area-inset-bottom));
+    z-index: 5;
+    display: grid;
+    gap: var(--sp-3);
+    padding: var(--sp-4);
+    margin-inline: calc(var(--gutter) * -1);
+    background: var(--c-inverse-bg);
+    color: var(--c-inverse-ink);
+    --c-muted: var(--c-inverse-muted);
+    --c-line: var(--c-inverse-line);
+  }
+  .calc__total-wrap { display: grid; gap: 2px; }
+  .calc__label { font-size: var(--fs-xs); letter-spacing: 0.06em; text-transform: uppercase; }
+  .calc__total { font-size: var(--fs-2xl); font-weight: 300; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .calc__meta { font-size: var(--fs-xs); }
+  .calc__details summary { font-size: var(--fs-sm); cursor: pointer; }
+  .calc__breakdown { display: grid; margin-top: var(--sp-3); font-size: var(--fs-sm); }
+  .calc__breakdown :global(li) {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    padding-block: var(--sp-2);
+    border-bottom: 1px solid var(--c-line);
+  }
+  .calc__note { margin-top: var(--sp-3); font-size: var(--fs-xs); }
+  .calc__summary .btn { border-color: var(--c-inverse-ink); background: var(--c-inverse-ink); color: var(--c-inverse-bg); }
+  .calc__summary .btn:hover { background: transparent; color: var(--c-inverse-ink); }
+
+  .calc__wa { gap: var(--sp-2); }
+  .calc__wa-short { display: none; }
+
+  /* ტელეფონი / პლანშეტი: კომპაქტური ზოლი — მხოლოდ ფასი და WhatsApp ღილაკი */
+  @media (max-width: 1023px) {
+    .calc__summary {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: var(--sp-3);
+      padding: var(--sp-3) var(--gutter);
+    }
+    .calc__label, .calc__meta, .calc__details { display: none; }
+    .calc__total { font-size: var(--fs-xl); white-space: nowrap; }
+    .calc__wa { width: auto; min-height: 44px; padding-inline: var(--sp-4); }
+    .calc__wa-long { display: none; }
+    .calc__wa-short { display: inline; }
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .calc__summary { margin-inline: 0; }
+  }
+  @media (min-width: 1024px) {
+    .calc__wa-icon { display: none; }
+  }
+  @media (min-width: 1024px) {
+    .calc { grid-template-columns: 1.5fr 1fr; gap: var(--sp-8); }
+    .calc__summary {
+      top: calc(var(--header-h) + var(--sp-5));
+      bottom: auto;
+      padding: var(--sp-6);
+      gap: var(--sp-5);
+    }
+    .calc__details[open] summary, .calc__details summary { pointer-events: none; list-style: none; }
+    .calc__details summary::-webkit-details-marker { display: none; }
+  }
+</style>
+
+<script>
+  import { initCalculator } from '../../scripts/calculator';
+  initCalculator();
+</script>

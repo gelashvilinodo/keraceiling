@@ -1,0 +1,211 @@
+<svg width="416" height="246" viewBox="0 0 416 246" fill="none" xmlns="http://www.w3.org/2000/svg">
+<title>KERA Ceiling (dark background)</title>
+<defs>
+  <!-- ===== Shapes (shared for fills, textures, clips) ===== -->
+  <path id="k-stem-top" d="M0 14.2086V224.209C11.5 202.709 27.6968 186.998 41.5 172.209C55.5 157.209 73 140.44 94 125.709C127.5 102.209 114.061 111.553 143 91.7086C160.5 79.7086 178.5 69.7086 196 61.2086C224.97 47.1375 239.5 39.7086 247.5 36.2086C253.9 33.4086 260.833 35.0419 263.5 36.2086C310.5 57.3753 405 101.209 405 101.209L408.5 102.709L416 105.709V101.209V89.2086C416 87.6086 413.333 85.8753 412 85.2086L297.5 23.7086C286.667 18.2086 263.3 6.20861 256.5 2.20861C249.7 -1.79139 242.333 0.54194 239.5 2.20861L224.5 10.7086L193.5 27.7086L172 41.2086C165 45.5419 148.268 57.0264 135.5 65.7086C123 74.2086 109.5 84.2086 101 90.2086C91.5 97.7086 88.2 100.209 84 103.709C75 111.209 70.6667 114.042 69 115.709C69 84.0419 68.5 22.2086 68.5 14.2086C68.5 11.2086 66.5 9.20861 63.5 9.20861H5.00001C2.00002 9.20861 0 11.2086 0 14.2086Z"/>
+  <path id="k-stem-bottom" d="M2.28882e-05 235.209L1.00002 226.209L37.5 183.209L61.5 159.209L68 164.209V240.209C68 243.209 66 245.209 63 245.209H5.00002C2.00002 245.209 1.52588e-05 243.209 2.28882e-05 240.209V235.209Z"/>
+  <path id="k-leg" d="M111.3 129.65C100.5 137.209 86 148.209 70.3001 162.15L68 164.209L135.3 239.15C141.3 244.35 148.119 245.209 150.786 245.209H215.8C216.5 245.209 217.3 243.848 215.8 242.15C182.967 204.984 114 128.209 114 128.209L111.3 129.65Z"/>
+  <path id="ribbon" d="M1.52588e-05 224.209L4.50002 210.709L33 166.709L103.5 103.209L226 33.2086L263 24.7086L414 101.709L416 105.709V121.709C367.167 101.209 268.385 60.1019 263 57.7086C254 53.7086 251 55.2086 245 57.7086C241.057 59.3517 239 59.7086 233.5 62.2086C228 64.7086 216 70.5686 210 73.2086C197.5 78.7086 188 83.9191 177 89.7086C167.5 94.7086 157 101.209 145.5 108.209C141.5 110.209 122.833 122.375 114 128.209L111 132.709L92.5 148.209L77 159.209C75 160.042 70.4395 162.257 68 164.209C65.5 166.209 63.6614 167.779 62.5 168.709C60 170.709 56.5 173.709 53 177.209L46 184.209L37.5 192.709L31 199.209C29 201.209 24.7727 206.709 22.5 209.209C18 214.159 13.5 219.209 9.50002 224.209C4.41537 230.564 0.833349 236.709 1.52588e-05 237.709V224.209Z"/>
+  <path id="ceiling" d="M127.5 106.709L114 128.209C159.167 140.875 253 168.609 256 169.209C263.5 170.709 263.5 170.709 270 169.209L416 121.709L411.5 109.709L250.5 11.2086L127.5 106.709Z"/>
+
+  <clipPath id="clip-ceiling"><use href="#ceiling"/></clipPath>
+  <clipPath id="clip-stem-bottom"><use href="#k-stem-bottom"/></clipPath>
+  <clipPath id="clip-ribbon"><use href="#ribbon"/></clipPath>
+  <clipPath id="clip-black">
+    <use href="#k-stem-top"/><use href="#k-stem-bottom"/><use href="#k-leg"/>
+  </clipPath>
+
+  <!-- ===== Black lacquer / satin metal ===== -->
+  <linearGradient id="black-base" x1="40" y1="0" x2="230" y2="246" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#FBF7EF"/>
+    <stop offset="0.35" stop-color="#EAE3D5"/>
+    <stop offset="0.75" stop-color="#CFC6B4"/>
+    <stop offset="1" stop-color="#ADA391"/>
+  </linearGradient>
+  <!-- warm sheen picked up from the gold light -->
+  <linearGradient id="black-sheen" x1="0" y1="0" x2="416" y2="0" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#FFF4DC" stop-opacity="0"/>
+    <stop offset="0.48" stop-color="#FFF4DC" stop-opacity="0.05"/>
+    <stop offset="0.62" stop-color="#FFF4DC" stop-opacity="0.09"/>
+    <stop offset="0.78" stop-color="#FFF4DC" stop-opacity="0.04"/>
+    <stop offset="1" stop-color="#FFF4DC" stop-opacity="0"/>
+  </linearGradient>
+
+  <!-- ===== Champagne / brushed brass ribbon ===== -->
+  <linearGradient id="gold-ribbon" x1="-20" y1="230" x2="430" y2="60" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#7A5A2E"/>
+    <stop offset="0.10" stop-color="#B8925A"/>
+    <stop offset="0.24" stop-color="#E9D3A6"/>
+    <stop offset="0.33" stop-color="#FFF6DF"/>
+    <stop offset="0.42" stop-color="#D8B87F"/>
+    <stop offset="0.53" stop-color="#9C7A45"/>
+    <stop offset="0.62" stop-color="#E6CC97"/>
+    <stop offset="0.70" stop-color="#FFF8E6"/>
+    <stop offset="0.80" stop-color="#C9A86F"/>
+    <stop offset="0.92" stop-color="#8E6C3A"/>
+    <stop offset="1" stop-color="#C6A46A"/>
+  </linearGradient>
+  <!-- edge shading: light on top lip, shadow on underside -->
+  <linearGradient id="gold-depth" x1="0" y1="20" x2="0" y2="240" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.35"/>
+    <stop offset="0.25" stop-color="#FFFFFF" stop-opacity="0"/>
+    <stop offset="0.7" stop-color="#3B2A12" stop-opacity="0"/>
+    <stop offset="1" stop-color="#3B2A12" stop-opacity="0.35"/>
+  </linearGradient>
+
+  <!-- ===== Ceiling plane (lit underside) ===== -->
+  <linearGradient id="ceiling-base" x1="262" y1="14" x2="268" y2="170" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#2E2519"/>
+    <stop offset="0.32" stop-color="#6E5636"/>
+    <stop offset="0.52" stop-color="#B39260"/>
+    <stop offset="0.76" stop-color="#E3CDA0"/>
+    <stop offset="1" stop-color="#FBF1DC"/>
+  </linearGradient>
+  <radialGradient id="pool" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#FFF3D2" stop-opacity="0.85"/>
+    <stop offset="0.35" stop-color="#FFE6B0" stop-opacity="0.38"/>
+    <stop offset="1" stop-color="#FFE0A0" stop-opacity="0"/>
+  </radialGradient>
+  <!-- cove shadow under the gold edge -->
+  <linearGradient id="ceiling-cove" x1="250" y1="40" x2="262" y2="95" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#1A140C" stop-opacity="0.55"/>
+    <stop offset="1" stop-color="#1A140C" stop-opacity="0"/>
+  </linearGradient>
+
+  <!-- ===== Downlights ===== -->
+  <radialGradient id="lamp" cx="0.5" cy="0.45" r="0.55">
+    <stop offset="0" stop-color="#FFFFFF"/>
+    <stop offset="0.45" stop-color="#FFFBEF"/>
+    <stop offset="0.8" stop-color="#FFF0CC"/>
+    <stop offset="1" stop-color="#E9CF98"/>
+  </radialGradient>
+  <linearGradient id="lamp-rim" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#7E6034"/>
+    <stop offset="1" stop-color="#F3E2BC"/>
+  </linearGradient>
+
+  <!-- ===== Textures & light filters ===== -->
+  <filter id="grain-dark" x="0" y="0" width="100%" height="100%" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="11" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.25  0 0 0 0 0.2  0 0 0 0 0.12  0 0 0 0.14 0"/>
+  </filter>
+  <!-- soft shading on the ivory K: darker toward the lower edge -->
+  <linearGradient id="ivory-shade" x1="0" y1="0" x2="0" y2="246" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#3B2E1C" stop-opacity="0"/>
+    <stop offset="1" stop-color="#3B2E1C" stop-opacity="0.18"/>
+  </linearGradient>
+  <!-- fine film grain for black parts -->
+  <filter id="grain" x="0" y="0" width="100%" height="100%" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.09 0"/>
+  </filter>
+  <!-- brushed metal: stretched noise along the ribbon direction -->
+  <filter id="brushed" x="0" y="0" width="416" height="246" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.004 0.9" numOctaves="3" seed="3" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 0.96  0 0 0 0 0.86  0 0 0 0.55 -0.2"/>
+  </filter>
+  <!-- satin bevel/specular for the black K -->
+  <filter id="bevel-dark" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="1.6" result="b"/>
+    <feSpecularLighting in="b" surfaceScale="3" specularConstant="0.55" specularExponent="22" lighting-color="#FFEFD0" result="s">
+      <feDistantLight azimuth="235" elevation="48"/>
+    </feSpecularLighting>
+    <feComposite in="s" in2="SourceAlpha" operator="in" result="s2"/>
+    <feColorMatrix in="s2" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.45 0"/>
+  </filter>
+  <!-- metallic bevel for the gold ribbon -->
+  <filter id="bevel-gold" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="b"/>
+    <feSpecularLighting in="b" surfaceScale="2.5" specularConstant="0.9" specularExponent="28" lighting-color="#FFFFFF" result="s">
+      <feDistantLight azimuth="250" elevation="52"/>
+    </feSpecularLighting>
+    <feComposite in="s" in2="SourceAlpha" operator="in" result="s2"/>
+    <feColorMatrix in="s2" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.55 0"/>
+  </filter>
+  <filter id="k-cast" x="-10%" y="-10%" width="120%" height="130%" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+    <feOffset dy="2.5" result="o"/>
+    <feColorMatrix in="o" type="matrix" values="0 0 0 0 0.1  0 0 0 0 0.07  0 0 0 0 0.03  0 0 0 0.55 0" result="sh"/>
+    <feMerge><feMergeNode in="sh"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <!-- warm bloom around lamps -->
+  <filter id="bloom" x="-200%" y="-300%" width="500%" height="700%" color-interpolation-filters="sRGB">
+    <feGaussianBlur stdDeviation="7"/>
+  </filter>
+  <filter id="bloom-tight" x="-100%" y="-200%" width="300%" height="500%" color-interpolation-filters="sRGB">
+    <feGaussianBlur stdDeviation="2.2"/>
+  </filter>
+  <!-- soft contact shadow under the lamps (from original design, refined) -->
+  <filter id="lamp-shadow" x="-20%" y="-60%" width="140%" height="260%" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+    <feOffset dy="1.5" result="o"/>
+    <feColorMatrix in="o" type="matrix" values="0 0 0 0 0.16  0 0 0 0 0.11  0 0 0 0 0.05  0 0 0 0.45 0" result="sh"/>
+    <feMerge><feMergeNode in="sh"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+
+<!-- 1. lower stem (sits under the ribbon) -->
+<use href="#k-stem-bottom" fill="url(#black-base)"/>
+<g clip-path="url(#clip-stem-bottom)"><rect width="416" height="246" fill="url(#ivory-shade)"/><rect width="416" height="246" filter="url(#grain-dark)" opacity="0.6"/></g>
+<use href="#k-stem-bottom" fill="#000" filter="url(#bevel-dark)"/>
+
+<!-- ===================== CEILING PLANE ===================== -->
+<g clip-path="url(#clip-ceiling)">
+  <use href="#ceiling" fill="url(#ceiling-base)"/>
+  <!-- light pools thrown by each downlight -->
+  <ellipse cx="201.5" cy="132" rx="58" ry="26" fill="url(#pool)"/>
+  <ellipse cx="263.5" cy="110" rx="56" ry="25" fill="url(#pool)" opacity="0.9"/>
+  <ellipse cx="327.5" cy="132" rx="58" ry="26" fill="url(#pool)"/>
+  <use href="#ceiling" fill="url(#ceiling-cove)"/>
+  <!-- subtle plaster grain -->
+  <rect width="416" height="246" filter="url(#grain)" opacity="0.45"/>
+</g>
+
+
+<!-- ===================== GOLD RIBBON ===================== -->
+<g>
+  <use href="#ribbon" fill="url(#gold-ribbon)"/>
+  <g clip-path="url(#clip-ribbon)">
+    <rect width="416" height="246" filter="url(#brushed)" style="mix-blend-mode:overlay"/>
+    <rect width="416" height="246" fill="url(#gold-depth)"/>
+  </g>
+  <use href="#ribbon" fill="#000" filter="url(#bevel-gold)"/>
+</g>
+
+<!-- ===================== IVORY K (top stem + leg) ===================== -->
+<g filter="url(#k-cast)">
+  <use href="#k-stem-top" fill="url(#black-base)"/>
+  <use href="#k-leg" fill="url(#black-base)"/>
+  <g clip-path="url(#clip-black)">
+    <rect width="416" height="246" fill="url(#ivory-shade)"/>
+    <rect width="416" height="246" filter="url(#grain-dark)" opacity="0.6"/>
+  </g>
+  <use href="#k-stem-top" fill="#000" filter="url(#bevel-dark)"/>
+  <use href="#k-leg" fill="#000" filter="url(#bevel-dark)"/>
+</g>
+
+<!-- ===================== DOWNLIGHTS ===================== -->
+<g>
+  <!-- wide warm bloom -->
+  <g filter="url(#bloom)" opacity="0.85">
+    <ellipse cx="201.5" cy="121" rx="20" ry="8.5" fill="#FFE2A6"/>
+    <ellipse cx="263.5" cy="98.5" rx="20" ry="8.5" fill="#FFE2A6"/>
+    <ellipse cx="327.5" cy="121" rx="20" ry="8.5" fill="#FFE2A6"/>
+  </g>
+  <!-- trims + emitters -->
+  <g filter="url(#lamp-shadow)">
+    <ellipse cx="201.5" cy="120.7" rx="17.5" ry="7.5" fill="url(#lamp-rim)"/>
+    <ellipse cx="263.5" cy="98.2" rx="17.5" ry="7.5" fill="url(#lamp-rim)"/>
+    <ellipse cx="327.5" cy="120.7" rx="17.5" ry="7.5" fill="url(#lamp-rim)"/>
+  </g>
+  <ellipse cx="201.5" cy="120.9" rx="15.6" ry="6.3" fill="url(#lamp)"/>
+  <ellipse cx="263.5" cy="98.4" rx="15.6" ry="6.3" fill="url(#lamp)"/>
+  <ellipse cx="327.5" cy="120.9" rx="15.6" ry="6.3" fill="url(#lamp)"/>
+  <!-- hot cores -->
+  <g filter="url(#bloom-tight)">
+    <ellipse cx="201.5" cy="120.6" rx="8" ry="2.8" fill="#FFFFFF"/>
+    <ellipse cx="263.5" cy="98.1" rx="8" ry="2.8" fill="#FFFFFF"/>
+    <ellipse cx="327.5" cy="120.6" rx="8" ry="2.8" fill="#FFFFFF"/>
+  </g>
+</g>
+</svg>

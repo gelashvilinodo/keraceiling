@@ -1,0 +1,91 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import { portfolio, portfolioCategories } from '../../data/content';
+import SwipeBar from '../SwipeBar.astro';
+---
+
+<section class="section" id="portfolio">
+  <div class="container">
+    <SectionHeading index="05" label="ნამუშევრები" title="შესრულებული პროექტები" />
+
+    <div class="filters" role="group" aria-label="ფილტრი ოთახის ტიპით" data-filters>
+      {portfolioCategories.map((c, i) => (
+        <button type="button" class="filter" data-filter={c.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+          {c.label}
+        </button>
+      ))}
+    </div>
+
+    <ul role="list" class="works swipe" data-works aria-label="ნამუშევრები — გადაფურცლეთ გვერდულად">
+      {portfolio.map((p) => (
+        <li class="work" data-cat={p.cat}>
+          <img
+            class="work__img"
+            src={`/images/portfolio/${p.img}-960.jpg`}
+            srcset={`/images/portfolio/${p.img}-480.jpg 480w, /images/portfolio/${p.img}-960.jpg 960w`}
+            sizes="(min-width: 1416px) 430px, (min-width: 1024px) 31vw, (min-width: 640px) 46vw, 82vw"
+            width="960"
+            height="1200"
+            alt={p.alt}
+            loading="lazy"
+            decoding="async"
+          />
+          <h3 class="work__title">{p.title}</h3>
+          <p class="work__meta muted">{p.meta}</p>
+        </li>
+      ))}
+    </ul>
+    <SwipeBar />
+  </div>
+</section>
+
+<style>
+  .filters {
+    display: flex;
+    gap: var(--sp-2);
+    overflow-x: auto;
+    margin: 0 calc(var(--gutter) * -1) var(--sp-6);
+    padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .filter {
+    flex-shrink: 0;
+    min-height: 40px;
+    padding: 0 var(--sp-4);
+    font-size: var(--fs-sm);
+    border: 1px solid var(--c-line);
+    transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .filter:hover { border-color: var(--c-ink); }
+  .filter[aria-pressed='true'] { background: var(--c-ink); color: var(--c-bg); border-color: var(--c-ink); }
+
+  .works { display: grid; gap: var(--sp-6) var(--sp-4); grid-template-columns: 1fr; }
+  .work[hidden] { display: none; }
+  .work__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    background: #e6e6e3;
+  }
+  .work__title { margin-top: var(--sp-3); font-size: var(--fs-lg); }
+  .work__meta { font-size: var(--fs-sm); }
+
+  @media (min-width: 640px) { .works { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .works { grid-template-columns: repeat(3, 1fr); } }
+</style>
+
+<script>
+  const wrap = document.querySelector<HTMLElement>('[data-filters]');
+  const works = document.querySelectorAll<HTMLElement>('[data-cat]');
+  wrap?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+    if (!btn) return;
+    const f = btn.dataset.filter;
+    wrap.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    works.forEach((w) => (w.hidden = f !== 'all' && w.dataset.cat !== f));
+    document.querySelector<HTMLElement>('[data-works]')?.scrollTo({ left: 0 });
+  });
+</script>

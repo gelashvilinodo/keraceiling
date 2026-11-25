@@ -1,0 +1,86 @@
+---
+import Logo from './Logo.astro';
+import { site, nav, whatsappLink } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <Logo variant="dark" />
+      <p class="muted">{site.description}</p>
+    </div>
+
+    <div>
+      <p class="footer__title">ნავიგაცია</p>
+      <ul role="list" class="footer__list">
+        {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+      </ul>
+    </div>
+
+    <div>
+      <p class="footer__title">კონტაქტი</p>
+      <ul role="list" class="footer__list">
+        <li><a href={site.phoneHref}>{site.phone}</a></li>
+        <li><a href={whatsappLink()} target="_blank" rel="noopener">WhatsApp</a></li>
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li class="muted">{site.address}</li>
+        <li class="muted">{site.hours}</li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="footer__title">სოციალური ქსელები</p>
+      <ul role="list" class="footer__list">
+        {site.socials.map((s) => <li><a href={s.href} target="_blank" rel="noopener">{s.label}</a></li>)}
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer__bottom">
+    <span>© {year} {site.name} {site.nameSuffix}</span>
+    <span class="muted">ყველა უფლება დაცულია</span>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--c-inverse-bg);
+    color: var(--c-inverse-ink);
+    --c-muted: var(--c-inverse-muted);
+    --c-line: var(--c-inverse-line);
+    padding-top: var(--sp-8);
+  }
+  .footer__grid {
+    display: grid;
+    gap: var(--sp-6);
+    padding-bottom: var(--sp-7);
+  }
+  .footer__brand { display: grid; gap: var(--sp-4); max-width: 36ch; }
+  .footer__brand p { font-size: var(--fs-sm); }
+  .footer__title {
+    font-size: var(--fs-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+    margin-bottom: var(--sp-3);
+  }
+  .footer__list { display: grid; gap: var(--sp-2); font-size: var(--fs-sm); }
+  .footer__list a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--sp-2);
+    padding-block: var(--sp-5);
+    border-top: 1px solid var(--c-line);
+    font-size: var(--fs-xs);
+  }
+
+  @media (min-width: 768px) {
+    .footer__grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 1024px) {
+    .footer__grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
+  }
+</style>

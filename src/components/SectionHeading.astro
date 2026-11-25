@@ -1,0 +1,45 @@
+---
+interface Props {
+  /** საწყისი ნომერი HTML-ში. ბრაუზერში ნომრები თავიდან ითვლება — მხოლოდ ხილული სექციები, თანმიმდევრობით */
+  index: string;
+  label: string;
+  title: string;
+  lead?: string;
+}
+const { index, label, title, lead } = Astro.props;
+---
+
+<div class="sh">
+  <p class="sh__eyebrow"><span data-section-num>{index}</span> — {label}</p>
+  <h2 class="sh__title">{title}</h2>
+  {lead && <p class="sh__lead muted">{lead}</p>}
+</div>
+
+<style>
+  .sh { display: grid; gap: var(--sp-4); margin-bottom: var(--sp-7); max-width: 60ch; }
+  .sh__eyebrow {
+    font-size: var(--fs-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+  .sh__eyebrow span { color: inherit; font-variant-numeric: tabular-nums; }
+  .sh__title { font-size: var(--fs-2xl); font-weight: 300; }
+  .sh__lead { font-size: var(--fs-lg); }
+</style>
+
+<script>
+  // სექციების ნუმერაცია: ითვლება მხოლოდ ხილული სექციები, რომ ნომერი არ გამოტოვოს
+  // (მაგ. შეფასებები დამალულია, სანამ ერთი მაინც არ დადასტურდება).
+  // სექცია, რომელიც მოგვიანებით გამოჩნდება/დაიმალება, აგზავნის `sections:change`-ს.
+  const renumber = () => {
+    let n = 0;
+    document.querySelectorAll<HTMLElement>('[data-section-num]').forEach((el) => {
+      if (el.closest('[hidden]')) return;
+      n += 1;
+      el.textContent = String(n).padStart(2, '0');
+    });
+  };
+  renumber();
+  document.addEventListener('sections:change', renumber);
+</script>

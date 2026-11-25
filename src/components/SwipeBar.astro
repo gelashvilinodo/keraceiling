@@ -1,0 +1,56 @@
+---
+// ტელეფონზე ჰორიზონტალური გალერეის (.swipe) პროგრესის ზოლი.
+// იდება უშუალოდ გალერეის სიის შემდეგ: <ul class="swipe">…</ul><SwipeBar />
+---
+
+<div class="swipe-bar" aria-hidden="true" data-swipe-bar><span class="swipe-bar__thumb"></span></div>
+
+<style>
+  .swipe-bar {
+    display: none;
+    position: relative;
+    height: 2px;
+    margin-top: var(--sp-4);
+    background: var(--c-line);
+    overflow: hidden;
+  }
+  .swipe-bar__thumb {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--w, 30%);
+    background: var(--c-ink);
+    transform: translateX(var(--x, 0%));
+    transition: transform 120ms linear;
+  }
+  @media (max-width: 639px) {
+    .swipe-bar { display: block; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-swipe-bar]').forEach((bar) => {
+    const list = bar.previousElementSibling as HTMLElement | null;
+    const thumb = bar.firstElementChild as HTMLElement | null;
+    if (!list || !thumb) return;
+
+    const update = () => {
+      const max = list.scrollWidth - list.clientWidth;
+      // ზოლი ჩანს მხოლოდ მაშინ, როცა გალერეა რეალურად სქროლვადია
+      bar.style.visibility = max > 1 ? 'visible' : 'hidden';
+      if (max <= 1) return;
+      const visible = list.clientWidth / list.scrollWidth; // ხილული ნაწილი
+      const progress = list.scrollLeft / max; // 0…1
+      thumb.style.setProperty('--w', `${visible * 100}%`);
+      // translateX % ითვლება thumb-ის სიგანიდან
+      thumb.style.setProperty('--x', `${progress * ((1 - visible) / visible) * 100}%`);
+    };
+
+    list.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    // ფილტრის შეცვლისას (ნამუშევრები) ან შეფასებების ჩატვირთვისას ელემენტების რაოდენობა იცვლება
+    new MutationObserver(update).observe(list, { childList: true, attributes: true, subtree: true, attributeFilter: ['hidden'] });
+    update();
+  });
+</script>
