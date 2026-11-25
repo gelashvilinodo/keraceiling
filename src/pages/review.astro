@@ -188,11 +188,14 @@ const ratingLabels = ['ძალიან ცუდი', 'ცუდი', 'სა
       });
       const out = await res.json().catch(() => ({}));
       if (!res.ok || !out.ok) throw Object.assign(new Error(out.error || 'send failed'), { field: out.field, user: !!out.error });
+      form.reset();
       form.hidden = true;
+      // სათაური და შესავალი აღარ გვჭირდება — ეკრანზე მხოლოდ მადლობა დარჩეს
+      document.querySelector<HTMLElement>('.rv__head')?.setAttribute('hidden', '');
       if (done) {
         done.hidden = false;
-        done.focus();
-        done.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        done.focus({ preventScroll: true });
       }
     } catch (err) {
       const e = err as Error & { field?: string; user?: boolean };
