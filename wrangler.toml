@@ -7,8 +7,7 @@ pages_build_output_dir = "./dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "keraceiling-reviews"
-# TODO: ჩაანაცვლეთ `npx wrangler d1 create keraceiling-reviews`-ის მიერ მოცემული ID-ით
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "e6247633-2bcf-4df3-9b9e-d2783383b002"
 migrations_dir = "migrations"
 
 # საიდუმლო მნიშვნელობები აქ არ იწერება. Cloudflare-ში: Settings → Variables and Secrets,
