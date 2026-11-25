@@ -12,7 +12,7 @@ import {
   notifyTelegram,
   MAX_PER_HOUR,
   MIN_FILL_SECONDS,
-} from '../../server/reviews';
+} from '../reviews';
 
 export const onRequestGet = async ({ env }: Ctx) => {
   const { results } = await env.DB.prepare(

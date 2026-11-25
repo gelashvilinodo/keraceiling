@@ -1,7 +1,7 @@
 # KERA CEILING — გასაჭიმი ჭერების საიტი
 
-Astro (სტატიკური საიტი) + Vanilla TypeScript. ჰოსტინგი: **Cloudflare Pages**.
-სერვერული ნაწილი მხოლოდ დამკვეთების შეფასებებს სჭირდება (Pages Functions + D1 ბაზა) — იხ. ქვემოთ „შეფასებები“.
+Astro (სტატიკური საიტი) + Vanilla TypeScript. ჰოსტინგი: **Cloudflare Workers** (static assets).
+სერვერული ნაწილი მხოლოდ დამკვეთების შეფასებებს სჭირდება (Worker + D1 ბაზა) — იხ. ქვემოთ „შეფასებები“.
 
 ## გაშვება
 
@@ -33,7 +33,8 @@ src/
   scripts/calculator.ts   ← კალკულატორის ლოგიკა
   pages/index.astro, 404.astro
   pages/review.astro      ← დამალული შეფასების გვერდი (/review)
-functions/api/            ← Cloudflare Pages Functions (შეფასებების API)
+worker/index.ts           ← Cloudflare Worker: /api/* → API, დანარჩენი → საიტის ფაილები
+server/api/               ← შეფასებების API (reviews, moderate, admin)
 server/reviews.ts         ← API-ის საერთო ლოგიკა
 migrations/               ← D1 ბაზის სტრუქტურა
 wrangler.toml             ← Cloudflare-ის კონფიგურაცია
@@ -70,13 +71,21 @@ public/            ← ფოტოები, favicon, ფონტები
 
 ### პირველადი დაყენება
 
-```bash
-npx wrangler login                                  # Cloudflare ანგარიშში შესვლა
-npx wrangler d1 create keraceiling-reviews          # ბაზის შექმნა → დააკოპირეთ database_id wrangler.toml-ში
-npm run db:migrate:remote                           # ცხრილის შექმნა Cloudflare-ის ბაზაში
-```
+**1. ბაზა.** Cloudflare → Storage & databases → D1 SQL database → Create → `keraceiling-reviews`.
+Database ID ჩაწერეთ `wrangler.toml`-ში. ბაზის **Console**-ში სათითაოდ შეასრულეთ
+[migrations/0001_reviews.sql](migrations/0001_reviews.sql)-ის ბრძანებები (ან: `npx wrangler login && npm run db:migrate:remote`).
 
-Cloudflare Dashboard → Workers & Pages → პროექტი → **Settings → Variables and Secrets** (Production):
+**2. საიტი (Workers Builds).** Workers & Pages → Create application → Import a repository → `keraceiling`:
+
+| ველი | მნიშვნელობა |
+|---|---|
+| Project name | `keraceiling` (უნდა ემთხვეოდეს `wrangler.toml`-ის `name`-ს) |
+| Build command | `npm run build` |
+| Deploy command | `npx wrangler deploy` |
+
+ბაზა და საიტის ფაილები Worker-ს `wrangler.toml`-იდან უერთდება. ყოველი `git push` → ავტომატური განახლება.
+
+**3. საიდუმლოები.** Worker → **Settings → Variables and Secrets → Add** (ტიპი **Secret**):
 
 | სახელი | რა არის |
 |---|---|
@@ -89,15 +98,15 @@ Telegram-ის `CHAT_ID`: მისწერეთ ახალ ბოტს �
 `https://api.telegram.org/bot<TOKEN>/getUpdates` — `"chat":{"id": …}` არის საჭირო რიცხვი.
 ჯგუფში შეტყობინებისთვის: ბოტი დაამატეთ ჯგუფში და იგივე გააკეთეთ (ჯგუფის ID უარყოფითი რიცხვია).
 
-საიტის ატვირთვა: Git რეპოზიტორიის მიერთება Pages-თან (Build command: `npm run build`, Output: `dist`)
-ან ხელით: `npm run deploy`. D1 ბაზა პროექტს `wrangler.toml`-იდან უერთდება.
+**4. დომენი.** Worker → Settings → Domains & Routes → Add → Custom domain.
+შემდეგ `astro.config.mjs`-ში `site` შეცვალეთ რეალური დომენით.
 
 ### ლოკალური შემოწმება
 
 ```bash
 cp .dev.vars.example .dev.vars    # შეავსეთ (Telegram შეგიძლიათ ცარიელი დატოვოთ)
 npm run db:migrate:local
-npm run cf:dev                    # http://localhost:8788 — საიტი + API + ლოკალური ბაზა
+npm run cf:dev                    # http://localhost:8788 — საიტი + API + ლოკალური ბაზა (wrangler dev)
 ```
 
 `npm run dev` (Astro) API-ს არ უშვებს — იქ შეფასებების სექცია უბრალოდ დამალულია.

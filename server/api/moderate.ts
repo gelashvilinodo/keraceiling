@@ -9,7 +9,7 @@ import {
   signId,
   safeEqual,
   reviewCard,
-} from '../../../server/reviews';
+} from '../reviews';
 
 const load = (ctx: Ctx, id: string) =>
   ctx.env.DB.prepare(`SELECT id, name, rating, text, room, district, status, created_at FROM reviews WHERE id = ?`)

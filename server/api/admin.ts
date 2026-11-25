@@ -9,7 +9,7 @@ import {
   adminToken,
   adminCookie,
   reviewCard,
-} from '../../../server/reviews';
+} from '../reviews';
 
 const loginForm = (error = '') =>
   page(
