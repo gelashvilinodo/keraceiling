@@ -13,7 +13,6 @@ export const site = {
   phoneHref: 'tel:+995500000000',
   whatsapp: '995500000000', // მხოლოდ ციფრები, „+“-ის გარეშე
   viber: 'viber://chat?number=%2B995500000000',
-  email: 'info@example.ge',
   address: 'თბილისი',
   hours: 'ორშ–შაბ · 10:00–19:00',
   area: 'თბილისი და მიმდებარე რეგიონები',

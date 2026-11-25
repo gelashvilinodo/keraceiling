@@ -5,6 +5,7 @@ import type { Ctx, Env as ReviewsEnv } from '../server/reviews';
 import * as reviews from '../server/api/reviews';
 import * as moderate from '../server/api/moderate';
 import * as admin from '../server/api/admin';
+import * as leads from '../server/api/leads';
 
 interface Env extends ReviewsEnv {
   ASSETS: { fetch(request: Request): Promise<Response> };
@@ -21,6 +22,8 @@ const routes: Record<string, Route> = {
   '/api/reviews': reviews,
   '/api/reviews/moderate': moderate,
   '/api/reviews/admin': admin,
+  '/api/leads': { onRequestPost: leads.onRequestPost },
+  '/api/leads/status': { onRequestPost: leads.onStatusPost },
 };
 
 export default {

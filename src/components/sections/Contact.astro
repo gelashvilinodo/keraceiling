@@ -15,29 +15,36 @@ import { site, whatsappLink } from '../../data/site';
       <ul role="list" class="contact__list">
         <li><span class="muted">ტელეფონი</span><a href={site.phoneHref}>{site.phone}</a></li>
         <li><span class="muted">WhatsApp</span><a href={whatsappLink()} target="_blank" rel="noopener">მოგვწერეთ</a></li>
-        <li><span class="muted">ელ. ფოსტა</span><a href={`mailto:${site.email}`}>{site.email}</a></li>
         <li><span class="muted">მისამართი</span><span>{site.address}</span></li>
         <li><span class="muted">საათები</span><span>{site.hours}</span></li>
         <li><span class="muted">ზონა</span><span>{site.area}</span></li>
       </ul>
     </div>
 
-    <!-- TODO: ფორმა დასაკავშირებელია (Web3Forms / Formspree / Telegram) -->
-    <form class="form" data-contact-form novalidate>
+    <!-- ფორმა: მოთხოვნა ჯერ ინახება (/api/leads → ადმინ-გვერდი), შემდეგ იხსნება WhatsApp შედგენილი შეტყობინებით -->
+    <form class="form" data-contact-form data-wa-number={site.whatsapp} novalidate>
       <label class="field">
         <span class="field__label">სახელი</span>
         <input class="input" name="name" autocomplete="name" required />
       </label>
       <label class="field">
         <span class="field__label">ტელეფონი</span>
-        <input class="input" name="phone" type="tel" inputmode="tel" autocomplete="tel" required />
+        <input class="input" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="5XX XX XX XX" required />
       </label>
       <label class="field">
         <span class="field__label">კომენტარი</span>
-        <textarea class="textarea" name="message" rows="4"></textarea>
+        <textarea class="textarea" name="message" rows="4" maxlength="1000" placeholder="მაგ. ოთახის ზომა, სასურველი ჭერის ტიპი"></textarea>
       </label>
-      <button class="btn btn--primary btn--block" type="submit">გაგზავნა</button>
-      <p class="form__status muted" role="status" data-form-status></p>
+      <!-- ბოტებისგან დაცვა: ადამიანი ამ ველს ვერ ხედავს -->
+      <div class="form__trap" aria-hidden="true">
+        <label>ვებგვერდი <input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
+      </div>
+      <button class="btn btn--primary btn--block form__submit" type="submit">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+        გაგზავნა WhatsApp-ით
+      </button>
+      <p class="form__hint muted">გაიხსნება WhatsApp უკვე შედგენილი შეტყობინებით — დარჩება მხოლოდ „გაგზავნა“.</p>
+      <p class="form__status" role="status" data-form-status></p>
     </form>
   </div>
 </section>
@@ -55,7 +62,12 @@ import { site, whatsappLink } from '../../data/site';
   }
   .contact__list a:hover { text-decoration: underline; text-underline-offset: 4px; }
   .form { display: grid; gap: var(--sp-4); align-content: start; }
+  .form__submit { gap: var(--sp-2); }
+  .form__hint { font-size: var(--fs-xs); margin-top: calc(var(--sp-2) * -1); }
   .form__status { font-size: var(--fs-sm); min-height: 1.5em; }
+  .form__status.is-ok { color: var(--c-ink); }
+  .form__status.is-error { color: #e08a7f; }
+  .form__trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 
   @media (min-width: 1024px) {
     .contact { grid-template-columns: 1fr 1fr; gap: var(--sp-8); }
@@ -64,15 +76,60 @@ import { site, whatsappLink } from '../../data/site';
 </style>
 
 <script>
+  // 1) მოთხოვნა ინახება ბაზაში (keepalive — დასრულდება, თუნდაც გვერდი WhatsApp-ზე გადავიდეს)
+  // 2) იხსნება WhatsApp შედგენილი შეტყობინებით კომპანიის ნომერზე
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
   const status = form?.querySelector<HTMLElement>('[data-form-status]');
+  const openedAt = Date.now();
+
+  const say = (text: string, kind: 'ok' | 'error') => {
+    if (!status) return;
+    status.textContent = text;
+    status.classList.toggle('is-ok', kind === 'ok');
+    status.classList.toggle('is-error', kind === 'error');
+  };
+
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (!form.checkValidity()) {
-      status!.textContent = 'გთხოვთ, შეავსოთ სახელი და ტელეფონი.';
+    const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+    const name = (data.name ?? '').trim();
+    const phone = (data.phone ?? '').trim();
+    const message = (data.message ?? '').trim();
+    const digits = phone.replace(/\D/g, '');
+
+    if (name.length < 2) {
+      say('გთხოვთ, მიუთითოთ სახელი.', 'error');
+      form.querySelector<HTMLInputElement>('[name="name"]')?.focus();
       return;
     }
-    // TODO: რეალური გაგზავნა
-    status!.textContent = 'ფორმა ჯერ არ არის დაკავშირებული (დემო).';
+    if (digits.length < 9) {
+      say('გთხოვთ, მიუთითოთ სწორი ტელეფონის ნომერი.', 'error');
+      form.querySelector<HTMLInputElement>('[name="phone"]')?.focus();
+      return;
+    }
+
+    // 1) შენახვა
+    fetch('/api/leads', {
+      method: 'POST',
+      keepalive: true,
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ name, phone, message, website: data.website ?? '', t: openedAt }),
+    }).catch(() => {});
+
+    // 2) WhatsApp
+    const text = [
+      'გამარჯობა! მინდა უფასო კონსულტაცია.',
+      '',
+      `სახელი: ${name}`,
+      `ტელეფონი: ${phone}`,
+      ...(message ? ['', message] : []),
+    ].join('\n');
+    const url = `https://wa.me/${form.dataset.waNumber}?text=${encodeURIComponent(text)}`;
+    const win = window.open(url, '_blank');
+    if (win) win.opener = null;
+    else window.location.href = url; // თუ ბრაუზერმა ახალი ფანჯარა დაბლოკა
+
+    say('მოთხოვნა მიღებულია ✓ WhatsApp-ში დააჭირეთ „გაგზავნას“. თუ ვერ მოახერხეთ — არაუშავს, ამ ნომერზე თავად დაგიკავშირდებით.', 'ok');
+    form.reset();
   });
 </script>

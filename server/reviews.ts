@@ -216,4 +216,4 @@ export async function isAdmin(env: Env, request: Request) {
 }
 
 export const adminCookie = (token: string, maxAge = 60 * 60 * 8) =>
-  `${ADMIN_COOKIE}=${token}; Path=/api/reviews; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`;
+  `${ADMIN_COOKIE}=${token}; Path=/api; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`;
