@@ -1,28 +1,36 @@
 import prices from '../data/prices.json';
 import { whatsappLink } from '../data/site';
 
-type Room = { l: number; w: number; materialId: string; finishId: string; profileId: string; bathroom: boolean };
+type Room = { l: number; w: number; materialId: string; finishId: string; profileId: string };
 
 const fmt = new Intl.NumberFormat('ka-GE', { maximumFractionDigits: 0 });
 const fmt1 = new Intl.NumberFormat('ka-GE', { maximumFractionDigits: 1 });
 const cur = prices.currency;
 const money = (n: number) => `${fmt.format(n)} ${cur}`;
-const roundTo = (n: number, step = 10) => Math.round(n / step) * step;
 const num = (el: HTMLInputElement | null) => Math.max(0, parseFloat(el?.value.replace(',', '.') ?? '') || 0);
 
 const byId = <T extends { id: string }>(list: T[], id: string) => list.find((x) => x.id === id) ?? list[0];
-const bathBaseRate = byId(prices.material, prices.bathroom.baseMaterialId).pricePerM2;
+const smallBaseRate = byId(prices.material, prices.smallRoom.baseMaterialId).pricePerM2;
 
-/** ოთახის ფასი: ტილო (აბაზანაზე — ფიქსირებული 10 მ²-მდე) + პროფილი პერიმეტრზე. პროფილი ცალკე არ ჩანს. */
+/**
+ * ოთახის ფასი: ტილო + პროფილი პერიმეტრზე (პროფილი ცალკე არ ჩანს).
+ * პატარა ოთახის (10 მ²-მდე) ტილო — მინიმუმ 300 ₾ ჩინურზე, სხვა მასალაზე პროპორციით: max(ფართი × ფასი, მინიმუმი).
+ * from = ფასი საწყისია („-დან“): ჩინური მასალა ან მინიმალური ფასი.
+ */
 export function roomCost(r: Room, replace: boolean) {
   const area = r.l * r.w;
   const perim = 2 * (r.l + r.w);
-  const rate = byId(prices.material, r.materialId).pricePerM2 * (replace ? prices.replace.factor : 1);
-  const { includedM2, basePrice } = prices.bathroom;
-  const canvas = r.bathroom
-    ? (basePrice * rate) / bathBaseRate + Math.max(0, area - includedM2) * rate
-    : area * rate;
-  return { area, perim, cost: canvas + perim * byId(prices.profile, r.profileId).pricePerM };
+  const material = byId(prices.material, r.materialId);
+  const rate = material.pricePerM2 * (replace ? prices.replace.factor : 1);
+  const minCanvas = (prices.smallRoom.minPrice * rate) / smallBaseRate;
+  const small = area > 0 && area * rate < minCanvas;
+  const canvas = small ? minCanvas : area * rate;
+  return {
+    area,
+    perim,
+    cost: canvas + perim * byId(prices.profile, r.profileId).pricePerM,
+    from: material.from || small,
+  };
 }
 
 export function initCalculator() {
@@ -58,31 +66,32 @@ export function initCalculator() {
       materialId: r.querySelector<HTMLSelectElement>('[data-material]')!.value,
       finishId: r.querySelector<HTMLSelectElement>('[data-finish]')!.value,
       profileId: r.querySelector<HTMLSelectElement>('[data-profile]')!.value,
-      bathroom: r.querySelector<HTMLInputElement>('[data-bath]')!.checked,
     }));
 
   function update() {
     const rooms = readRooms();
     const replace = replaceEl.checked;
-    const lines: { label: string; value: number }[] = [];
+    const lines: { label: string; value: number; from: boolean }[] = [];
     const msg: string[] = ['გამარჯობა! გამოვთვალე ფასი საიტზე:', ''];
     let total = 0;
     let totalArea = 0;
+    let from = false;
 
     roomsEl.querySelectorAll<HTMLElement>('[data-room]').forEach((el, i) => {
       const r = rooms[i];
-      const { area, perim, cost } = roomCost(r, replace);
+      const { area, perim, cost, from: roomFrom } = roomCost(r, replace);
       const material = byId(prices.material, r.materialId);
       const finish = byId(prices.finish, r.finishId);
       const profile = byId(prices.profile, r.profileId);
-      const name = r.bathroom ? 'აბაზანა' : `ოთახი ${i + 1}`;
+      const name = `ოთახი ${i + 1}`;
 
       el.querySelector('[data-area]')!.textContent = fmt1.format(area);
       el.querySelector('[data-perim]')!.textContent = fmt1.format(perim);
 
       total += cost;
       totalArea += area;
-      lines.push({ label: `${name} · ${fmt1.format(area)} მ² · ${material.label}, ${finish.label}`, value: cost });
+      from ||= roomFrom;
+      lines.push({ label: `${name} · ${fmt1.format(area)} მ² · ${material.label}, ${finish.label}`, value: cost, from: roomFrom });
       msg.push(
         `${name}: ${r.l}×${r.w} მ (${fmt1.format(area)} მ²), ${material.label}, ${finish.label}, პროფილი: ${profile.label}`,
       );
@@ -93,23 +102,26 @@ export function initCalculator() {
       if (!qty) return;
       const cost = qty * x.price;
       total += cost;
-      lines.push({ label: `${x.label} × ${fmt1.format(qty)} ${x.unit}`, value: cost });
+      from ||= !!x.from;
+      lines.push({ label: `${x.label} × ${fmt1.format(qty)} ${x.unit}`, value: cost, from: !!x.from });
       msg.push(`${x.label}: ${fmt1.format(qty)} ${x.unit}`);
     });
     if (replace) msg.push(prices.replace.label);
 
     const minApplied = total > 0 && total < prices.minOrder;
-    if (minApplied) total = prices.minOrder;
+    if (minApplied) {
+      total = prices.minOrder;
+      from = true;
+    }
+    const totalText = `${money(Math.round(total))}${from ? '-დან' : ''}`;
 
     if (totalArea <= 0) {
       totalEl.textContent = '—';
       metaEl.textContent = 'შეიყვანეთ ოთახის ზომები';
     } else {
-      const lo = Math.max(prices.minOrder, roundTo(total * prices.range.low));
-      const hi = Math.max(lo, roundTo(total * prices.range.high));
-      totalEl.textContent = `${fmt.format(lo)} – ${fmt.format(hi)} ${cur}`;
+      totalEl.textContent = totalText;
       metaEl.textContent = `სულ ${fmt1.format(totalArea)} მ²${minApplied ? ` · მინიმალური შეკვეთა ${money(prices.minOrder)}` : ''}`;
-      msg.push('', `სავარაუდო ფასი: ${fmt.format(lo)} – ${fmt.format(hi)} ${cur}`, '', 'მინდა უფასო კონსულტაცია.');
+      msg.push('', `ფასი: ${totalText}`, '', 'მინდა უფასო კონსულტაცია.');
     }
 
     breakdownEl.replaceChildren(
@@ -118,7 +130,7 @@ export function initCalculator() {
         const a = document.createElement('span');
         const b = document.createElement('span');
         a.textContent = l.label;
-        b.textContent = money(l.value);
+        b.textContent = `${money(Math.round(l.value))}${l.from ? '-დან' : ''}`;
         li.append(a, b);
         return li;
       }),

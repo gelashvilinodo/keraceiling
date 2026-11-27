@@ -1,26 +1,61 @@
 {
   "_note": "დამკვეთის ფასები (2026-11). საორიენტაციოა — ზუსტი ფასი კონსულტაციის შემდეგ.",
   "currency": "₾",
-  "range": { "low": 0.95, "high": 1.15 },
   "minOrder": 300,
   "material": [
-    { "id": "china", "label": "ჩინური", "note": "Halead / Premium", "pricePerM2": 25 },
-    { "id": "germany", "label": "გერმანული", "note": "Bauf", "pricePerM2": 35 },
-    { "id": "print", "label": "ფოტობეჭდვით", "note": "", "pricePerM2": 80 }
+    {
+      "id": "china",
+      "label": "ჩინური",
+      "note": "Halead / Premium",
+      "pricePerM2": 25,
+      "from": true
+    },
+    {
+      "id": "germany",
+      "label": "გერმანული",
+      "note": "Bauf",
+      "pricePerM2": 35,
+      "from": false
+    },
+    {
+      "id": "print",
+      "label": "ფოტობეჭდვით",
+      "note": "",
+      "pricePerM2": 80,
+      "from": false
+    }
   ],
   "finish": [
-    { "id": "matte", "label": "მატი" },
-    { "id": "glossy", "label": "პრიალა" }
+    {
+      "id": "matte",
+      "label": "მატი"
+    },
+    {
+      "id": "glossy",
+      "label": "პრიალა"
+    }
   ],
   "profile": [
-    { "id": "standard", "label": "სტანდარტული", "pricePerM": 0 },
-    { "id": "shadow", "label": "ჩრდილის (პლასტმასი)", "pricePerM": 7 },
-    { "id": "floating", "label": "ჩრდილის / მცურავი (ალუმინი)", "pricePerM": 70 }
+    {
+      "id": "standard",
+      "label": "სტანდარტული",
+      "pricePerM": 0
+    },
+    {
+      "id": "shadow",
+      "label": "ჩრდილის (პლასტმასი)",
+      "pricePerM": 7
+    },
+    {
+      "id": "floating",
+      "label": "ჩრდილის / მცურავი (ალუმინი)",
+      "pricePerM": 70
+    }
   ],
-  "bathroom": {
-    "_note": "აბაზანა: 10 მ²-მდე ფიქსირებული ფასი (ჩინურზე 300 ₾), მერე ყოველი მ² — ჩვეულებრივად. სხვა მასალაზე — პროპორციით.",
-    "includedM2": 10,
-    "basePrice": 300,
+  "smallRoom": {
+    "_note": "10 მ²-მდე ნებისმიერი ოთახი: ჩინურზე 300 ₾-დან (სხვა მასალაზე — პროპორციით). ოთახის ტილოს ფასი = max(ფართი × მ²-ის ფასი, ეს მინიმუმი).",
+    "maxM2": 10,
+    "minPrice": 300,
     "baseMaterialId": "china"
   },
   "replace": {
@@ -30,10 +65,46 @@
     "factor": 0.8
   },
   "extras": [
-    { "id": "spot", "label": "სპოტ-სანათის წერტილი", "hint": "ნათურა ფასში არ შედის", "unit": "ცალი", "price": 15, "step": 1 },
-    { "id": "chandelier", "label": "ჭაღის სამაგრი", "hint": "ფასი ჭაღის ზომაზეა დამოკიდებული", "unit": "ცალი", "price": 15, "from": true, "step": 1 },
-    { "id": "lightLine", "label": "სანათი ხაზი", "hint": "განათების ჩათვლით", "unit": "მ", "price": 150, "step": 0.5 },
-    { "id": "curtainPlastic", "label": "ფარდის ნიშა — პლასტმასი", "hint": "მასალა და მონტაჟი", "unit": "მ", "price": 100, "step": 0.5 },
-    { "id": "curtainAlu", "label": "ფარდის ნიშა — ალუმინი", "hint": "მასალა და მონტაჟი", "unit": "მ", "price": 150, "step": 0.5 }
+    {
+      "id": "spot",
+      "label": "სპოტ-სანათის წერტილი",
+      "hint": "ნათურა ფასში არ შედის",
+      "unit": "ცალი",
+      "price": 15,
+      "step": 1
+    },
+    {
+      "id": "chandelier",
+      "label": "ჭაღის სამაგრი",
+      "hint": "ფასი ჭაღის ზომაზეა დამოკიდებული",
+      "unit": "ცალი",
+      "price": 15,
+      "from": true,
+      "step": 1
+    },
+    {
+      "id": "lightLine",
+      "label": "სანათი ხაზი",
+      "hint": "განათების ჩათვლით",
+      "unit": "მ",
+      "price": 150,
+      "step": 0.5
+    },
+    {
+      "id": "curtainPlastic",
+      "label": "ფარდის ნიშა — პლასტმასი",
+      "hint": "მასალა და მონტაჟი",
+      "unit": "მ",
+      "price": 100,
+      "step": 0.5
+    },
+    {
+      "id": "curtainAlu",
+      "label": "ფარდის ნიშა — ალუმინი",
+      "hint": "მასალა და მონტაჟი",
+      "unit": "მ",
+      "price": 150,
+      "step": 0.5
+    }
   ]
 }
