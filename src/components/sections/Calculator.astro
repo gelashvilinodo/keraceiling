@@ -1,6 +1,7 @@
 ---
 import SectionHeading from '../SectionHeading.astro';
 import prices from '../../data/prices.json';
+import { whatsappLink } from '../../data/site';
 const cur = prices.currency;
 ---
 
@@ -30,7 +31,7 @@ const cur = prices.currency;
               <div class="stepper-row">
                 <label class="stepper-row__label" for={`x-${x.id}`}>
                   {x.label}
-                  <small class="muted">{x.price} {cur} / {x.unit}</small>
+                  <small class="muted">{x.price} {cur}{x.from ? '-დან' : ''} / {x.unit} · {x.hint}</small>
                 </label>
                 <div class="stepper">
                   <button type="button" data-step="-1" aria-label={`${x.label} — შემცირება`}>−</button>
@@ -50,10 +51,16 @@ const cur = prices.currency;
           </div>
 
           <label class="check">
-            <input type="checkbox" data-dismantle />
-            <span>{prices.dismantle.label} <small class="muted">{prices.dismantle.pricePerM2} {cur}/მ²</small></span>
+            <input type="checkbox" data-replace />
+            <span>{prices.replace.label} <small class="muted">{prices.replace.hint}</small></span>
           </label>
         </fieldset>
+
+        <p class="calc__other muted">
+          სატინი, ფერადი, მეტალიკი, ვარსკვლავიანი ცა ან სხვა გადაწყვეტა გაინტერესებთ?{' '}
+          <a href={whatsappLink('გამარჯობა! მაინტერესებს ფასი: ')} target="_blank" rel="noopener">მოგვწერეთ</a>{' '}ან{' '}
+          <a href="#contact">დაგვიკავშირდით</a> — ფასს ინდივიდუალურად დაგითვლით.
+        </p>
       </div>
 
       <!-- შედეგი -->
@@ -95,17 +102,27 @@ const cur = prices.currency;
           </label>
           <label class="field room__full">
             <span class="field__label">მასალა</span>
-            <select class="select" data-canvas>
-              {prices.canvas.map((c) => <option value={c.id}>{c.label} — {c.pricePerM2} {cur}/მ²</option>)}
+            <select class="select" data-material>
+              {prices.material.map((m) => (
+                <option value={m.id}>{m.label}{m.note ? ` (${m.note})` : ''} — {m.pricePerM2} {cur}/მ²-დან</option>
+              ))}
+            </select>
+          </label>
+          <label class="field room__full">
+            <span class="field__label">ზედაპირი</span>
+            <select class="select" data-finish>
+              {prices.finish.map((f) => <option value={f.id}>{f.label}</option>)}
             </select>
           </label>
           <label class="field room__full">
             <span class="field__label">პროფილი</span>
             <select class="select" data-profile>
-              {prices.profile.map((p) => (
-                <option value={p.id}>{p.label}{p.pricePerM ? ` — +${p.pricePerM} ${cur}/მ` : ''}</option>
-              ))}
+              {prices.profile.map((p) => <option value={p.id}>{p.label}</option>)}
             </select>
+          </label>
+          <label class="check room__full">
+            <input type="checkbox" data-bath />
+            <span>აბაზანა <small class="muted">{prices.bathroom.basePrice} {cur} {prices.bathroom.includedM2} მ²-მდე, შემდეგ — მ²-ის ფასით</small></span>
           </label>
         </div>
         <p class="room__meta muted">ფართი <b data-area>0</b> მ² · პერიმეტრი <b data-perim>0</b> მ</p>
@@ -183,9 +200,12 @@ const cur = prices.currency;
   .stepper input::-webkit-outer-spin-button,
   .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-  .check { display: flex; gap: var(--sp-3); align-items: center; font-size: var(--fs-sm); min-height: 44px; cursor: pointer; }
-  .check input { width: 20px; height: 20px; accent-color: var(--c-ink); }
-  .check small { display: block; font-size: var(--fs-xs); }
+  .calc__other { font-size: var(--fs-sm); }
+  .calc__other a { color: var(--c-ink); text-decoration: underline; text-underline-offset: 4px; }
+
+  :global(.check) { display: flex; gap: var(--sp-3); align-items: center; font-size: var(--fs-sm); min-height: 44px; cursor: pointer; }
+  :global(.check input) { width: 20px; height: 20px; accent-color: var(--c-ink); }
+  :global(.check small) { display: block; font-size: var(--fs-xs); }
 
   /* შედეგი — მობაილზე მიმაგრებული ქვემოთ */
   .calc__summary {

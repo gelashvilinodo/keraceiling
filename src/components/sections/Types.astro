@@ -31,7 +31,7 @@ import SwipeBar from '../SwipeBar.astro';
           <div class="type__body">
             <h3 class="type__title">{t.title}</h3>
             <p class="type__text muted">{t.text}</p>
-            <p class="type__price">{t.priceFrom} {prices.currency}/მ²-დან</p>
+            <p class="type__price">{t.priceFrom ? `${t.priceFrom} ${prices.currency}/მ²-დან` : 'ფასი — შეთანხმებით'}</p>
           </div>
         </li>
       ))}

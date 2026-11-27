@@ -1,24 +1,39 @@
 {
-  "_note": "ფლეისჰოლდერი ფასები! ჩანაცვლდება დამკვეთის პასუხების შემდეგ (კითხვარი, ბლოკი „გ“).",
+  "_note": "დამკვეთის ფასები (2026-11). საორიენტაციოა — ზუსტი ფასი კონსულტაციის შემდეგ.",
   "currency": "₾",
-  "rangeSpread": 0.07,
+  "range": { "low": 0.95, "high": 1.15 },
   "minOrder": 300,
-  "canvas": [
-    { "id": "matte", "label": "მატი", "pricePerM2": 25 },
-    { "id": "satin", "label": "სატინი", "pricePerM2": 28 },
-    { "id": "glossy", "label": "პრიალა", "pricePerM2": 30 }
+  "material": [
+    { "id": "china", "label": "ჩინური", "note": "Halead / Premium", "pricePerM2": 25 },
+    { "id": "germany", "label": "გერმანული", "note": "Bauf", "pricePerM2": 35 },
+    { "id": "print", "label": "ფოტობეჭდვით", "note": "", "pricePerM2": 80 }
+  ],
+  "finish": [
+    { "id": "matte", "label": "მატი" },
+    { "id": "glossy", "label": "პრიალა" }
   ],
   "profile": [
     { "id": "standard", "label": "სტანდარტული", "pricePerM": 0 },
-    { "id": "shadow", "label": "ჩრდილის", "pricePerM": 20 },
-    { "id": "floating", "label": "მცურავი (LED)", "pricePerM": 45 }
+    { "id": "shadow", "label": "ჩრდილის (პლასტმასი)", "pricePerM": 7 },
+    { "id": "floating", "label": "ჩრდილის / მცურავი (ალუმინი)", "pricePerM": 70 }
   ],
+  "bathroom": {
+    "_note": "აბაზანა: 10 მ²-მდე ფიქსირებული ფასი (ჩინურზე 300 ₾), მერე ყოველი მ² — ჩვეულებრივად. სხვა მასალაზე — პროპორციით.",
+    "includedM2": 10,
+    "basePrice": 300,
+    "baseMaterialId": "china"
+  },
+  "replace": {
+    "_note": "ძველი გასაჭიმი ჭერის შეცვლა: პროფილები რჩება, ჩინურზე 20 ₾/მ² 25-ის ნაცვლად. სხვა მასალაზე — პროპორციით.",
+    "label": "ძველი გასაჭიმი ჭერის შეცვლა",
+    "hint": "პროფილები კედელზე რჩება, ამიტომ ფასი იკლებს. ვხსნით მხოლოდ გასაჭიმ ჭერს.",
+    "factor": 0.8
+  },
   "extras": [
-    { "id": "spot", "label": "სპოტ-სანათი", "unit": "ცალი", "price": 15, "step": 1 },
-    { "id": "chandelier", "label": "ჭაღის სამაგრი", "unit": "ცალი", "price": 20, "step": 1 },
-    { "id": "lightLine", "label": "სანათი ხაზი", "unit": "მ", "price": 90, "step": 0.5 },
-    { "id": "curtain", "label": "ფარდის ნიშა", "unit": "მ", "price": 40, "step": 0.5 },
-    { "id": "pipe", "label": "მილის შემოვლა", "unit": "ცალი", "price": 15, "step": 1 }
-  ],
-  "dismantle": { "label": "ძველი ჭერის მოხსნა", "pricePerM2": 5 }
+    { "id": "spot", "label": "სპოტ-სანათის წერტილი", "hint": "ნათურა ფასში არ შედის", "unit": "ცალი", "price": 15, "step": 1 },
+    { "id": "chandelier", "label": "ჭაღის სამაგრი", "hint": "ფასი ჭაღის ზომაზეა დამოკიდებული", "unit": "ცალი", "price": 15, "from": true, "step": 1 },
+    { "id": "lightLine", "label": "სანათი ხაზი", "hint": "განათების ჩათვლით", "unit": "მ", "price": 150, "step": 0.5 },
+    { "id": "curtainPlastic", "label": "ფარდის ნიშა — პლასტმასი", "hint": "მასალა და მონტაჟი", "unit": "მ", "price": 100, "step": 0.5 },
+    { "id": "curtainAlu", "label": "ფარდის ნიშა — ალუმინი", "hint": "მასალა და მონტაჟი", "unit": "მ", "price": 150, "step": 0.5 }
+  ]
 }

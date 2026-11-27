@@ -1,7 +1,7 @@
 import prices from '../data/prices.json';
 import { whatsappLink } from '../data/site';
 
-type Room = { l: number; w: number; canvasId: string; profileId: string };
+type Room = { l: number; w: number; materialId: string; finishId: string; profileId: string; bathroom: boolean };
 
 const fmt = new Intl.NumberFormat('ka-GE', { maximumFractionDigits: 0 });
 const fmt1 = new Intl.NumberFormat('ka-GE', { maximumFractionDigits: 1 });
@@ -10,8 +10,20 @@ const money = (n: number) => `${fmt.format(n)} ${cur}`;
 const roundTo = (n: number, step = 10) => Math.round(n / step) * step;
 const num = (el: HTMLInputElement | null) => Math.max(0, parseFloat(el?.value.replace(',', '.') ?? '') || 0);
 
-const canvasById = (id: string) => prices.canvas.find((c) => c.id === id) ?? prices.canvas[0];
-const profileById = (id: string) => prices.profile.find((p) => p.id === id) ?? prices.profile[0];
+const byId = <T extends { id: string }>(list: T[], id: string) => list.find((x) => x.id === id) ?? list[0];
+const bathBaseRate = byId(prices.material, prices.bathroom.baseMaterialId).pricePerM2;
+
+/** ოთახის ფასი: ტილო (აბაზანაზე — ფიქსირებული 10 მ²-მდე) + პროფილი პერიმეტრზე. პროფილი ცალკე არ ჩანს. */
+export function roomCost(r: Room, replace: boolean) {
+  const area = r.l * r.w;
+  const perim = 2 * (r.l + r.w);
+  const rate = byId(prices.material, r.materialId).pricePerM2 * (replace ? prices.replace.factor : 1);
+  const { includedM2, basePrice } = prices.bathroom;
+  const canvas = r.bathroom
+    ? (basePrice * rate) / bathBaseRate + Math.max(0, area - includedM2) * rate
+    : area * rate;
+  return { area, perim, cost: canvas + perim * byId(prices.profile, r.profileId).pricePerM };
+}
 
 export function initCalculator() {
   const root = document.querySelector<HTMLFormElement>('[data-calc]');
@@ -23,7 +35,7 @@ export function initCalculator() {
   const metaEl = root.querySelector<HTMLElement>('[data-meta]')!;
   const breakdownEl = root.querySelector<HTMLElement>('[data-breakdown]')!;
   const waEl = root.querySelector<HTMLAnchorElement>('[data-wa]')!;
-  const dismantleEl = root.querySelector<HTMLInputElement>('[data-dismantle]')!;
+  const replaceEl = root.querySelector<HTMLInputElement>('[data-replace]')!;
 
   const addRoom = () => {
     roomsEl.append(tpl.content.cloneNode(true));
@@ -43,12 +55,15 @@ export function initCalculator() {
     [...roomsEl.querySelectorAll<HTMLElement>('[data-room]')].map((r) => ({
       l: num(r.querySelector('[data-l]')),
       w: num(r.querySelector('[data-w]')),
-      canvasId: r.querySelector<HTMLSelectElement>('[data-canvas]')!.value,
+      materialId: r.querySelector<HTMLSelectElement>('[data-material]')!.value,
+      finishId: r.querySelector<HTMLSelectElement>('[data-finish]')!.value,
       profileId: r.querySelector<HTMLSelectElement>('[data-profile]')!.value,
+      bathroom: r.querySelector<HTMLInputElement>('[data-bath]')!.checked,
     }));
 
   function update() {
     const rooms = readRooms();
+    const replace = replaceEl.checked;
     const lines: { label: string; value: number }[] = [];
     const msg: string[] = ['გამარჯობა! გამოვთვალე ფასი საიტზე:', ''];
     let total = 0;
@@ -56,19 +71,21 @@ export function initCalculator() {
 
     roomsEl.querySelectorAll<HTMLElement>('[data-room]').forEach((el, i) => {
       const r = rooms[i];
-      const area = r.l * r.w;
-      const perim = 2 * (r.l + r.w);
-      const canvas = canvasById(r.canvasId);
-      const profile = profileById(r.profileId);
-      const cost = area * canvas.pricePerM2 + perim * profile.pricePerM + (dismantleEl.checked ? area * prices.dismantle.pricePerM2 : 0);
+      const { area, perim, cost } = roomCost(r, replace);
+      const material = byId(prices.material, r.materialId);
+      const finish = byId(prices.finish, r.finishId);
+      const profile = byId(prices.profile, r.profileId);
+      const name = r.bathroom ? 'აბაზანა' : `ოთახი ${i + 1}`;
 
       el.querySelector('[data-area]')!.textContent = fmt1.format(area);
       el.querySelector('[data-perim]')!.textContent = fmt1.format(perim);
 
       total += cost;
       totalArea += area;
-      lines.push({ label: `ოთახი ${i + 1} · ${fmt1.format(area)} მ² · ${canvas.label}`, value: cost });
-      msg.push(`ოთახი ${i + 1}: ${r.l}×${r.w} მ (${fmt1.format(area)} მ²), ${canvas.label}, პროფილი: ${profile.label}`);
+      lines.push({ label: `${name} · ${fmt1.format(area)} მ² · ${material.label}, ${finish.label}`, value: cost });
+      msg.push(
+        `${name}: ${r.l}×${r.w} მ (${fmt1.format(area)} მ²), ${material.label}, ${finish.label}, პროფილი: ${profile.label}`,
+      );
     });
 
     prices.extras.forEach((x) => {
@@ -79,7 +96,7 @@ export function initCalculator() {
       lines.push({ label: `${x.label} × ${fmt1.format(qty)} ${x.unit}`, value: cost });
       msg.push(`${x.label}: ${fmt1.format(qty)} ${x.unit}`);
     });
-    if (dismantleEl.checked) msg.push(prices.dismantle.label);
+    if (replace) msg.push(prices.replace.label);
 
     const minApplied = total > 0 && total < prices.minOrder;
     if (minApplied) total = prices.minOrder;
@@ -88,8 +105,8 @@ export function initCalculator() {
       totalEl.textContent = '—';
       metaEl.textContent = 'შეიყვანეთ ოთახის ზომები';
     } else {
-      const lo = roundTo(total * (1 - prices.rangeSpread));
-      const hi = roundTo(total * (1 + prices.rangeSpread));
+      const lo = Math.max(prices.minOrder, roundTo(total * prices.range.low));
+      const hi = Math.max(lo, roundTo(total * prices.range.high));
       totalEl.textContent = `${fmt.format(lo)} – ${fmt.format(hi)} ${cur}`;
       metaEl.textContent = `სულ ${fmt1.format(totalArea)} მ²${minApplied ? ` · მინიმალური შეკვეთა ${money(prices.minOrder)}` : ''}`;
       msg.push('', `სავარაუდო ფასი: ${fmt.format(lo)} – ${fmt.format(hi)} ${cur}`, '', 'მინდა უფასო კონსულტაცია.');
